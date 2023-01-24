@@ -1,0 +1,3 @@
+[submodule "TabPFN"]
+	path = TabPFN
+	url = https://github.com/automl/TabPFN.git
