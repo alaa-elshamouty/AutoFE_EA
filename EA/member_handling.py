@@ -1,16 +1,16 @@
 from __future__ import annotations
 from sklearn.decomposition import PCA
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, List
 import random
 import numpy as np
 from sklearn.metrics import accuracy_score
 
-from EA.strategies import Mutation, Recombination, Combiner
+from EA.strategies import Mutation, Recombination, Combiner, apply_trajectory
 
 
 class Member:
     """Class to simplify member handling."""
-
+    last_id = 0
     def __init__(
             self,
             initial_x: np.ndarray,
@@ -23,6 +23,7 @@ class Member:
             recombination: Recombination,
             sigma: Optional[float] = None,
             recom_prob: Optional[float] = None,
+            trajectory: Tuple = (None,None,None,None,None),
     ) -> None:
         """
         Parameters
@@ -65,11 +66,15 @@ class Member:
         self._recom_prob = recom_prob
         self._max_dims = 100
 
-        # indicates how many offspring were generated from this member
-        self._age = 0
+
+        self._age = 0 # indicates how many offspring were generated from this member
+        self._id = Member.last_id
+        Member.last_id += 1
         self._x_changed = True
         self._fit_train = 0.0
         self._fit_test = 0.0
+        self.traj = trajectory
+
 
     @property
     def fitness(self) -> float:
@@ -77,8 +82,13 @@ class Member:
         if self._x_changed:
             self._x_changed = False
             self._f.fit(self._x,self._y_train)  # fitting model on the features
-            test_pred = self._f.predict(self._x_test)
-            self._fit_test = accuracy_score(test_pred,self._y_test)
+            train_score = accuracy_score(self._f.y_,self._y_train)
+            #transforming x test to have same features
+            traj = self.traj
+            new_x_test = apply_trajectory(self._x_test,traj)
+            test_pred = self._f.predict(new_x_test)
+            test_score = accuracy_score(test_pred,self._y_test)
+            self._fit_test = 0.1*train_score + 0.9*test_score
             self._f = self._f_initial  # restart model to avoid fitting over a fitted model
         return self._fit_test
 
@@ -96,6 +106,7 @@ class Member:
             norm = np.linalg.norm(value, 2)
             value /= norm
         if value.shape[-1]>self._max_dims:
+            print(f'Dimension exceeds max dimension, {value.shape[-1]},applying PCA')
             pca = PCA('mle')
             value = pca.fit_transform(value)
         self._x_changed = True
@@ -113,25 +124,11 @@ class Member:
         """
         new_x = self.x_coordinate.copy()
 
-        #print(f"new point before mutation:\n {new_x}")
-
-        # TODO modify new_x either through uniform or weighted mutation
-        # ---------------
         if self._mutation == Mutation.UNIFORM:
             col_id = np.random.randint(new_x.shape[-1])
-            opr = Combiner.single_ops[6]
-            #opr = np.random.choice(Combiner.single_ops,1)
-            col = new_x[:,col_id].reshape(-1,1)
-            if "sklearn" in str(type(opr)):
-                new_x[:,col_id] = opr.fit_transform(col).squeeze()
-            else:
-                if opr.__name__ == 'delete':
-                    new_x = opr(new_x,col_id)
-                elif opr.__name__ == 'power':
-                    new_x[:,col_id] = opr(col,2).squeeze()
-                else:
-                    new_x[:,col_id] = opr(col)
-
+            opr = np.random.choice(Combiner.single_ops,1)[0]
+            new_x = Mutation.apply_mutation(opr,new_x,col_id)
+            trajectory = [(opr,self._id,col_id,None,None),self.traj,None]
         elif self._mutation == Mutation.WEIGHTED:
             raise NotImplementedError
 
@@ -141,9 +138,6 @@ class Member:
         else:
             # We won't consider any other mutation types
             raise RuntimeError(f"Unknown mutation {self._mutation}")
-        # -----------------
-
-        print(f"new point after mutation: \n {new_x.shape}")
         child = Member(
             new_x,
             self._x_test,
@@ -155,6 +149,7 @@ class Member:
             self._recombination,
             self._sigma,
             self._recom_prob,
+            trajectory,
         )
         self._age += 1
         return child
@@ -179,23 +174,12 @@ class Member:
             raise NotImplementedError
         # ----------------
 
-        # TODO
-        # ----------------
         elif self._recombination == Recombination.UNIFORM:
-            opr = Combiner.combine_ops[1]
-            if "sklearn" in str(type(opr)):
-                new_x = opr.fit_transform(new_x)
-            else:
-                col_id = np.random.randint(new_x.shape[-1])
-                col = new_x[:,col_id]
-                partner_col_id = np.random.randint(partner.x_coordinate.shape[-1])
-                partner_col = partner.x_coordinate[:,partner_col_id]
-                if opr.__name__ == 'divide': # to handle dividing by zero
-                    new_col = opr(col, partner_col, out=np.zeros_like(col), where=partner_col!=0)
-                else:
-                    new_col = opr(col,partner_col).reshape(-1,1)
-                new_x = np.hstack((new_x,new_col))
-        # ----------------
+            opr = np.random.choice(Combiner.combine_ops,1)[0]
+            col_id = np.random.randint(new_x.shape[-1])
+            partner_col_id = np.random.randint(partner.x_coordinate.shape[-1])
+            new_x = Recombination.apply_recombination(opr,new_x,col_id,partner.x_coordinate,partner_col_id)
+            trajectory = [(opr,self._id,col_id,partner._id,partner_col_id),self.traj,partner.traj]
 
         elif self._recombination == Recombination.NONE:
             # copy is important here to not only get a reference
@@ -205,6 +189,7 @@ class Member:
             raise NotImplementedError
 
         print(f"new point after recombination:\n {new_x.shape}")
+
         child = Member(
             new_x,
             self._x_test,
@@ -216,13 +201,14 @@ class Member:
             self._recombination,
             self._sigma,
             self._recom_prob,
+            trajectory,
         )
         self._age += 1
         return child
 
     def __str__(self) -> str:
         """Makes the class easily printable"""
-        return f"Population member: Age={self._age}, n_cols={self.x_coordinate.shape[-1]}, f(x)={self.fitness}"
+        return f"Population member: ID = {self._id}, Age={self._age}, n_cols={self.x_coordinate.shape[-1]}, f(x)={self.fitness}"
 
     def __repr__(self) -> str:
         """Will also make it printable if it is an entry in a list"""
