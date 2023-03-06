@@ -4,6 +4,7 @@ from typing import Callable, Optional, Tuple, List
 import random
 import numpy as np
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import KFold
 
 from EA.strategies import Mutation, Recombination, Combiner, apply_trajectory
 
@@ -14,9 +15,7 @@ class Member:
     def __init__(
             self,
             initial_x: np.ndarray,
-            X_test: np.ndarray,
             y_train:np.ndarray,
-            y_test:np.ndarray,
             model: Callable,
             bounds: Tuple[float, float],
             mutation: Mutation,
@@ -54,9 +53,7 @@ class Member:
         """
         # astype is crucial here. Otherwise numpy might cast everything to int
         self._x = initial_x.astype(float)
-        self._x_test = X_test
         self._y_train = y_train
-        self._y_test = y_test
         self._f_initial = model
         self._f = model
         self._bounds = bounds
@@ -81,14 +78,20 @@ class Member:
         """Retrieve the fitness, recalculating it if x changed"""
         if self._x_changed:
             self._x_changed = False
-            self._f.fit(self._x,self._y_train)  # fitting model on the features
-            train_score = accuracy_score(self._f.y_,self._y_train)
-            #transforming x test to have same features
-            traj = self.traj
-            new_x_test = apply_trajectory(self._x_test,traj)
-            test_pred = self._f.predict(new_x_test)
-            test_score = accuracy_score(test_pred,self._y_test)
-            self._fit_test = 0.1*train_score + 0.9*test_score
+            # fitting model on the features
+            k = 5
+            kf = KFold(n_splits=k, random_state=None)
+            acc_score = []
+
+            for train_index, test_index in kf.split(self._x):
+                X_train, X_test = self._x[train_index, :], self._x[test_index, :]
+                y_train, y_test = self._y_train[train_index], self._y_train[test_index]
+                self._f.fit(X_train,y_train)
+                pred_values = self._f.predict(X_test)
+                acc = accuracy_score(pred_values, y_test)
+                acc_score.append(acc)
+
+            self._fit_test = np.average(acc_score)
             self._f = self._f_initial  # restart model to avoid fitting over a fitted model
         return self._fit_test
 
@@ -140,9 +143,7 @@ class Member:
             raise RuntimeError(f"Unknown mutation {self._mutation}")
         child = Member(
             new_x,
-            self._x_test,
             self._y_train,
-            self._y_test,
             self._f,
             self._bounds,
             self._mutation,
@@ -188,13 +189,11 @@ class Member:
         else:
             raise NotImplementedError
 
-        print(f"new point after recombination:\n {new_x.shape}")
+        #print(f"new point after recombination:\n {new_x.shape}")
 
         child = Member(
             new_x,
-            self._x_test,
             self._y_train,
-            self._y_test,
             self._f,
             self._bounds,
             self._mutation,
