@@ -7,7 +7,6 @@ from EA.evolution import EA
 from EA.strategies import ParentSelection, Mutation, Recombination, apply_trajectory
 import numpy as np
 
-
 if __name__ == "__main__":
     """Simple main to give an example of how to use the EA"""
     X, y = load_breast_cancer(return_X_y=True)
