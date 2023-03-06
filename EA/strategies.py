@@ -1,6 +1,13 @@
 from enum import IntEnum
 from functools import partial
 import numpy as np
+from autosklearn.pipeline.components.feature_preprocessing import FeaturePreprocessorChoice
+from sklearn.cluster import FeatureAgglomeration
+from sklearn.decomposition import PCA, FastICA, KernelPCA, TruncatedSVD
+from sklearn.ensemble import RandomTreesEmbedding
+from sklearn.feature_selection import SelectPercentile
+from sklearn.impute import SimpleImputer
+from sklearn.kernel_approximation import RBFSampler
 from sklearn.preprocessing import StandardScaler, QuantileTransformer, PowerTransformer, normalize, PolynomialFeatures
 
 from utilities import dim_check
@@ -8,9 +15,21 @@ from utilities import dim_check
 
 class Combiner:
     # TODO later adapt to autosklearn preprocessings
-    single_ops = [StandardScaler(), QuantileTransformer(), PowerTransformer(), partial(normalize, axis=0), np.log,
-                  np.delete, np.power]  # Todo remove power transform because TabPFN does it?
-    combine_ops = [PolynomialFeatures(2), np.add, np.subtract, np.multiply, np.divide]
+    single_ops = [None,
+                  StandardScaler(),
+                  SimpleImputer(
+                      strategy='mean', copy=False),
+                  RandomTreesEmbedding(),
+                  partial(FastICA),
+                  FeatureAgglomeration(n_clusters=None,distance_threshold=0.1),
+                  KernelPCA(),
+                  RBFSampler(),
+                  SelectPercentile(percentile=50),
+                  partial(TruncatedSVD),
+                  QuantileTransformer(),
+                  np.log, np.delete, np.power,
+                  partial(PCA)]
+    combine_ops = [PolynomialFeatures(2), np.multiply, np.divide]
 
 class Recombination(IntEnum):
     """Enum defining the recombination strategy choice"""
@@ -22,7 +41,11 @@ class Recombination(IntEnum):
     @staticmethod
     def apply_recombination(opr,x,col_id,partner_x,partner_col_id,lower=-np.inf,upper= np.inf,max_dims=100):
         if "sklearn" in str(type(opr)):
-            new_x = opr.fit_transform(x)
+            new_x = x.copy()
+            if 'Polynomial' in str(type(opr)):
+                cols = np.random.choice(x.shape[-1],x.shape[-1]//2)
+                new_x = new_x[:,cols]
+            new_x = opr.fit_transform(new_x)
         else:
             col = x[:,col_id]
             partner_col = partner_x[:,partner_col_id]
@@ -44,18 +67,35 @@ class Mutation(IntEnum):
     WEIGHTED = 1  # Gaussian mutation
 
     @staticmethod
-    def apply_mutation(opr,x,col_id):
-        col = x[:,col_id].reshape(-1,1)
+    def apply_mutation(opr,x,y=None,col_id=None,lower=-np.inf,upper= np.inf,max_dims=100):
+        if not opr:
+            return x
+        new_x = x.copy()
         if "sklearn" in str(type(opr)):
-            x[:,col_id] = opr.fit_transform(col).squeeze()
+            if 'selection' in str(type(opr)):
+                if y is None:
+                    raise ValueError('y not given for percentile selection')
+                new_x = opr.fit_transform(new_x,y).squeeze()
+            else:
+                new_x = opr.fit_transform(new_x)
+                if not isinstance(new_x,np.ndarray):
+                    new_x = new_x.toarray()
+                new_x = new_x.squeeze()
         elif "partial" not in str(type(opr)):
+            if not col_id:
+                raise ValueError('A column id is not defined')
+            col = new_x[:, col_id].reshape(-1, 1)
             if opr.__name__ == 'delete':
-                x = opr(x,col_id,axis=1)
+                new_x = opr(new_x,col_id,axis=1)
             elif opr.__name__ == 'power':
-                x[:,col_id] = opr(col,2).squeeze()
-        else:
-            x[:,col_id] = opr(col).squeeze()
-        return x
+                new_x[:,col_id] = opr(col,2).squeeze()
+            else:
+                new_x[:, col_id] = opr(col).squeeze()
+        else: #decomposition functions wrapped in partial to set n_components here
+            opr = opr(n_components = max(5,x.shape[-1]-5))
+            new_x = opr.fit_transform(new_x).squeeze()
+        new_x = dim_check(new_x, lower, upper, min(x.shape[-1]+6,max_dims))
+        return new_x
 
 class ParentSelection(IntEnum):
     """Enum defining the parent selection choice"""

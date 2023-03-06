@@ -130,7 +130,10 @@ class Member:
         if self._mutation == Mutation.UNIFORM:
             col_id = np.random.randint(new_x.shape[-1])
             opr = np.random.choice(Combiner.single_ops,1)[0]
-            new_x = Mutation.apply_mutation(opr,new_x,col_id)
+            if 'selection' in str(type(opr)):
+                new_x = Mutation.apply_mutation(opr, new_x, self._y_train, col_id)
+            else:
+                new_x = Mutation.apply_mutation(opr,new_x,col_id=col_id)
             trajectory = [(opr,self._id,col_id,None,None),self.traj,None]
         elif self._mutation == Mutation.WEIGHTED:
             raise NotImplementedError
