@@ -126,35 +126,28 @@ class EA:
         List[int]
             The indices of the parents in the sorted population
         """
-        parent_ids: List[int] = []
-
-        # TODO
-        # ---------------
         if self.selection == ParentSelection.NEUTRAL:
-            parents = np.random.choice(self.population,self.pop_size)
+            parents = np.random.choice(self.population,self.num_children)
 
         elif self.selection == ParentSelection.FITNESS:
             sum_fitness = sum([m.fitness for m in self.population])
-            # print([member.fitness for member in self.population])
-
-            parent_ids = np.random.choice(
-                range(self.pop_size - 1, -1, -1),  # xd
+            parents = np.random.choice(
+                self.population,
                 self.num_children, replace=False,
                 p=[member.fitness / sum_fitness for member in self.population]
-            ).tolist()
+            )
         elif self.selection == ParentSelection.TOURNAMENT:
             tournament_size = 3
+            parents: List[int] = []
             for _ in range(self.num_children):
-                # Choose random contestants
-                fighter_ids = np.random.permutation(range(self.pop_size))[0:tournament_size]
-                # fighters = [self.population[i] for i in fighter_ids]
-                # FIGHT! Use fact that population is sorted by fitness, so min(fighter_ids) always wins
-                parent_ids.append(min(fighter_ids))
+                fighters = np.random.choice(self.population,tournament_size,replace=False)
+                fitness = [fighter.fitness for fighter in fighters]
+                winner_id = np.argmax(fitness)
+                parents.append(fighters[winner_id])
         else:
             raise NotImplementedError
-        # ---------------
 
-        print(f"Selected parents: {parent_ids}")
+        print(f"Selected parents IDS: {[parent._id for parent in parents]}")
         return parents
 
     def step(self) -> float:
