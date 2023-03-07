@@ -12,17 +12,18 @@ from EA.strategies import Mutation, Recombination, Combiner, apply_trajectory
 class Member:
     """Class to simplify member handling."""
     last_id = 0
+
     def __init__(
             self,
             initial_x: np.ndarray,
-            y_train:np.ndarray,
+            y_train: np.ndarray,
             model: Callable,
             bounds: Tuple[float, float],
             mutation: Mutation,
             recombination: Recombination,
             sigma: Optional[float] = None,
             recom_prob: Optional[float] = None,
-            trajectory: Tuple = (None,None,None,None,None),
+            trajectory: Tuple = (None, None, None, None, None),
     ) -> None:
         """
         Parameters
@@ -63,15 +64,13 @@ class Member:
         self._recom_prob = recom_prob
         self._max_dims = 100
 
-
-        self._age = 0 # indicates how many offspring were generated from this member
+        self._age = 0  # indicates how many offspring were generated from this member
         self._id = Member.last_id
         Member.last_id += 1
         self._x_changed = True
         self._fit_train = 0.0
         self._fit_test = 0.0
         self.traj = trajectory
-
 
     @property
     def fitness(self) -> float:
@@ -86,7 +85,7 @@ class Member:
             for train_index, test_index in kf.split(self._x):
                 X_train, X_test = self._x[train_index, :], self._x[test_index, :]
                 y_train, y_test = self._y_train[train_index], self._y_train[test_index]
-                self._f.fit(X_train,y_train)
+                self._f.fit(X_train, y_train, overwrite_warning=True)
                 pred_values = self._f.predict(X_test)
                 acc = accuracy_score(pred_values, y_test)
                 acc_score.append(acc)
@@ -108,7 +107,7 @@ class Member:
             print(f"Member out of bounds, {value}, applying normalization")
             norm = np.linalg.norm(value, 2)
             value /= norm
-        if value.shape[-1]>self._max_dims:
+        if value.shape[-1] > self._max_dims:
             print(f'Dimension exceeds max dimension, {value.shape[-1]},applying PCA')
             pca = PCA('mle')
             value = pca.fit_transform(value)
@@ -129,12 +128,9 @@ class Member:
 
         if self._mutation == Mutation.UNIFORM:
             col_id = np.random.randint(new_x.shape[-1])
-            opr = np.random.choice(Combiner.single_ops,1)[0]
-            if 'selection' in str(type(opr)):
-                new_x = Mutation.apply_mutation(opr, new_x, self._y_train, col_id)
-            else:
-                new_x = Mutation.apply_mutation(opr,new_x,col_id=col_id)
-            trajectory = [(opr,self._id,col_id,None,None),self.traj,None]
+            opr_info = Combiner.get_random_mutation_opr()
+            opr, new_x = Mutation.apply_mutation(opr_info, new_x, y=self._y_train, col_id=col_id)
+            trajectory = [(opr, self._id, col_id, None, None), self.traj, None]
         elif self._mutation == Mutation.WEIGHTED:
             raise NotImplementedError
 
@@ -179,11 +175,12 @@ class Member:
         # ----------------
 
         elif self._recombination == Recombination.UNIFORM:
-            opr = np.random.choice(Combiner.combine_ops,1)[0]
+            opr_info = Combiner.get_random_crossover_opr()
             col_id = np.random.randint(new_x.shape[-1])
             partner_col_id = np.random.randint(partner.x_coordinate.shape[-1])
-            new_x = Recombination.apply_recombination(opr,new_x,col_id,partner.x_coordinate,partner_col_id)
-            trajectory = [(opr,self._id,col_id,partner._id,partner_col_id),self.traj,partner.traj]
+            opr, new_x = Recombination.apply_recombination(opr_info, new_x, col_id, partner.x_coordinate,
+                                                           partner_col_id)
+            trajectory = [(opr, self._id, col_id, partner._id, partner_col_id), self.traj, partner.traj]
 
         elif self._recombination == Recombination.NONE:
             # copy is important here to not only get a reference
@@ -192,7 +189,7 @@ class Member:
         else:
             raise NotImplementedError
 
-        #print(f"new point after recombination:\n {new_x.shape}")
+        # print(f"new point after recombination:\n {new_x.shape}")
 
         child = Member(
             new_x,
@@ -215,4 +212,3 @@ class Member:
     def __repr__(self) -> str:
         """Will also make it printable if it is an entry in a list"""
         return self.__str__() + "\n"
-
