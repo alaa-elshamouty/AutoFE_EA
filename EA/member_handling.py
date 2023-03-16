@@ -18,11 +18,8 @@ class Member:
             initial_x: np.ndarray,
             y_train: np.ndarray,
             model: Callable,
-            bounds: Tuple[float, float],
             mutation: Mutation,
             recombination: Recombination,
-            sigma: Optional[float] = None,
-            recom_prob: Optional[float] = None,
             trajectory: Tuple = (None, None, None, None, None),
     ) -> None:
         """
@@ -33,12 +30,6 @@ class Member:
 
         model : Callable
             The target function that determines the fitness value
-
-        bounds : Tuple[float, float]
-            Allowed bounds. For simplicities sake we assume that all elements in
-            initial_x have the same bounds:
-            * bounds[0] lower bound
-            * bounds[1] upper bound
 
         mutation : Mutation
             Hyperparameter that determines which mutation type use
@@ -57,11 +48,8 @@ class Member:
         self._y_train = y_train
         self._f_initial = model
         self._f = model
-        self._bounds = bounds
         self._mutation = mutation
         self._recombination = recombination
-        self._sigma = sigma
-        self._recom_prob = recom_prob
         self._max_dims = 100
 
         self._age = 0  # indicates how many offspring were generated from this member
@@ -102,11 +90,6 @@ class Member:
     @x_coordinate.setter
     def x_coordinate(self, value: np.ndarray) -> None:
         """Set the new x coordinate"""
-        lower, upper = self._bounds
-        if np.all((lower <= value) & (value <= upper)):
-            print(f"Member out of bounds, {value}, applying normalization")
-            norm = np.linalg.norm(value, 2)
-            value /= norm
         if value.shape[-1] > self._max_dims:
             print(f'Dimension exceeds max dimension, {value.shape[-1]},applying PCA')
             pca = PCA('mle')
@@ -144,11 +127,8 @@ class Member:
             new_x,
             self._y_train,
             self._f,
-            self._bounds,
             self._mutation,
             self._recombination,
-            self._sigma,
-            self._recom_prob,
             trajectory,
         )
         self._age += 1
@@ -195,11 +175,8 @@ class Member:
             new_x,
             self._y_train,
             self._f,
-            self._bounds,
             self._mutation,
             self._recombination,
-            self._sigma,
-            self._recom_prob,
             trajectory,
         )
         self._age += 1
