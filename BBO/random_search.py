@@ -5,7 +5,7 @@ from EA.strategies import Mutation, ParentSelection, Recombination
 
 
 class RandomSearch(BBO):
-    def determine_best_hypers(self):
+    def _determine_best_hypers(self):
         """Find the best combination with a sweep over the possible hyperparamters.
 
         # TODO
@@ -33,7 +33,7 @@ class RandomSearch(BBO):
         # This is grid search
 
         for mutation, selection, recombi in product(Mutation, ParentSelection, Recombination):
-            fitness = self.evaluate_black_box(mutation, selection, recombi)
+            fitness = self.evaluate_ea(mutation, selection, recombi)
             if fitness < best_perf:
                 best_perf = fitness
                 best = (mutation, selection, recombi)
