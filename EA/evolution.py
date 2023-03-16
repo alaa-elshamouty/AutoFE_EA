@@ -19,17 +19,14 @@ class EA:
             initial_X_train: np.ndarray,
             y_train: np.ndarray,
             population_size: int = 10,
-            problem_dim: int = 2,
-            problem_bounds: Tuple[float, float] = (-1000, 1000),  # TODO check bounds of TabPFN
             mutation_type: Mutation = Mutation.UNIFORM,
             recombination_type: Recombination = Recombination.UNIFORM,
             selection_type: ParentSelection = ParentSelection.NEUTRAL,
-            sigma: float = 1.0,
-            recom_proba: float = 0.5,
             total_number_of_function_evaluations: int = 200,
             children_per_step: int = 3,
             fraction_mutation: float = 0.5,
             max_pop_size: int = 20,
+            normalize: bool = True,
 
     ):
         """
@@ -41,11 +38,6 @@ class EA:
         population_size: int = 10
             The total population size to use
 
-        problem_dim: int = 2
-            The dimension of each member's x
-
-        problem_bounds: Tuple[float, float] = (-30, 30)
-            Used to make sure population members are valid
 
         mutation_type: Mutation = Mutation.UNIFORM
             Hyperparameter to set mutation strategy
@@ -56,9 +48,6 @@ class EA:
         selection_type: ParentSelection = ParentSelection.NEUTRAL
             Hyperparameter to set selection strategy
 
-        sigma: float = 1.0
-            Conditional hyperparameter dependent on mutation_type GAUSSIAN, defines
-            the sigma for the guassian distribution
 
         recom_proba: float = 0.5
             Conditional hyperparameter dependent on recombination_type UNIFORM.
@@ -79,8 +68,6 @@ class EA:
         assert 0 <= fraction_mutation <= 1
         assert 0 < children_per_step
         assert 0 < total_number_of_function_evaluations
-        assert 0 < sigma
-        assert 0 < problem_dim
         assert 0 < population_size
 
         # Step 1: initialize Population of size `population_size`
@@ -90,24 +77,21 @@ class EA:
                 initial_X_train,
                 y_train,
                 model,
-                problem_bounds,
                 mutation_type,
                 recombination_type,
-                sigma,
-                recom_proba,
             )
             for _ in range(population_size)
         ]
         self.population.sort(key=lambda x: x.fitness)
-
+        dimensionality = initial_X_train.shape[-1]  # number of columns
         self.pop_size = population_size
         self.selection = selection_type
-        self.max_func_evals = total_number_of_function_evaluations
+        self.max_func_evals = total_number_of_function_evaluations * dimensionality
         self.num_children = children_per_step
         self.frac_mutants = fraction_mutation
         self._func_evals = population_size
-        self.max_pop_size = max_pop_size
-
+        self.max_pop_size = max_pop_size * self.pop_size #* self.num_children
+        self.normalize=normalize
         # will store the optimization trajectory and lets you easily observe how
         # often a new best member was generated
         self.trajectory = [self.population[0]]
@@ -188,7 +172,8 @@ class EA:
         # Resort the population based on Fitness
         self.population.sort(key=lambda x: x.fitness, reverse=True)
 
-        if len(self.population) >= self.max_pop_size:
+        if len(self.population) > self.max_pop_size:
+            print('Regularizing :: population number: {}, max_pop_size: {}'.format(len(self.population),self.max_pop_size))
             # Resort the population based on age
             self.population.sort(key=lambda x: x._age,reverse=True)
             # Reduce the population
@@ -196,8 +181,7 @@ class EA:
             # Resort the population based on Fitness again
             self.population.sort(key=lambda x: x.fitness, reverse=True)
 
-
-
+        print('Normal :: population number: {}, max_pop_size: {}'.format(len(self.population), self.max_pop_size))
         # Append the best Member to the trajectory
         self.trajectory.append(self.population[0])
 

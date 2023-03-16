@@ -83,7 +83,7 @@ class Mutation(IntEnum):
     WEIGHTED = 1  # Gaussian mutation
 
     @staticmethod
-    def apply_mutation(opr_info, x, y=None, col_id=None, lower=-np.inf, upper=np.inf, max_dims=100,
+    def apply_mutation(opr_info, x, y=None, col_id=None, lower=-10, upper=10, max_dims=100,
                        applying_traj=False):
         new_x = x.copy()
         if applying_traj:
