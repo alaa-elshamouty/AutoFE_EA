@@ -11,5 +11,5 @@ open_ml_name_dict = {
     14: 'mfeat-fourier'
 }
 open_ml_ids = list(open_ml_name_dict.keys())
-sklearn_dataloaders = [load_iris, load_digits]
+sklearn_dataloaders = [load_digits,load_iris]
 datasets = sklearn_dataloaders + open_ml_ids
