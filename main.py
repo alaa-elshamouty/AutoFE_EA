@@ -7,7 +7,7 @@ sys.stdout = open('output_log.txt', 'w')
 if __name__ == "__main__":
     datasets = global_datasets.datasets
     smac_type = 'BOHB'
-    runtime = 21600
+    runtime = 7200
     working_dir = 'results_bo'
     normalizer = None
     for dataset in datasets:
