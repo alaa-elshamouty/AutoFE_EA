@@ -6,7 +6,8 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 
-from EA.strategies import Mutation, Recombination, Combiner, apply_trajectory
+from EA.strategies import Mutation, Recombination, Combiner
+
 
 
 class Member:
@@ -77,9 +78,10 @@ class Member:
                 pred_values = self._f.predict(X_test)
                 acc = accuracy_score(pred_values, y_test)
                 acc_score.append(acc)
+                self._f = self._f_initial  # restart model to avoid fitting over a fitted model
 
             self._fit_test = np.average(acc_score)
-            self._f = self._f_initial  # restart model to avoid fitting over a fitted model
+
         return self._fit_test
 
     @property

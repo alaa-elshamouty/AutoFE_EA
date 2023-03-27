@@ -1,17 +1,15 @@
 import random
 from enum import IntEnum
-from functools import partial
 import numpy as np
-from autosklearn.pipeline.components.feature_preprocessing import FeaturePreprocessorChoice
 from sklearn.cluster import FeatureAgglomeration
 from sklearn.decomposition import PCA, FastICA, KernelPCA, TruncatedSVD
 from sklearn.ensemble import RandomTreesEmbedding
 from sklearn.feature_selection import SelectPercentile
 from sklearn.impute import SimpleImputer
 from sklearn.kernel_approximation import RBFSampler
-from sklearn.preprocessing import StandardScaler, QuantileTransformer, PowerTransformer, normalize, PolynomialFeatures
+from sklearn.preprocessing import StandardScaler, QuantileTransformer, PolynomialFeatures
 
-from utilities import dim_check
+from utilities import check_all
 
 
 class Combiner:
@@ -71,7 +69,7 @@ class Recombination(IntEnum):
                 opr = opr_class(**params)
                 new_x = opr.fit_transform(new_x)
 
-        new_x = dim_check(new_x, lower, upper, max_dims=min(x.shape[-1] + 6, max_dims))
+        new_x = check_all(new_x, lower, upper, max_dims=min(x.shape[-1] + 6, max_dims))
         return opr, new_x
 
 
@@ -120,7 +118,7 @@ class Mutation(IntEnum):
                 if not isinstance(new_x, np.ndarray):
                     new_x = new_x.toarray()
 
-        new_x = dim_check(new_x, lower, upper, min(x.shape[-1] + 6, max_dims))
+        new_x = check_all(new_x, lower, upper, min(x.shape[-1] + 6, max_dims))
         return opr, new_x
 
 
@@ -130,6 +128,18 @@ class ParentSelection(IntEnum):
     NEUTRAL = 0
     FITNESS = 1
     TOURNAMENT = 2
+
+
+def apply_operator(traj, data, partner_data, rec=False):
+    new_x = data.copy()
+    opr, _, col_id, _, partner_col_id = traj
+    if rec:
+        _, new_x = Recombination.apply_recombination(opr, new_x, col_id, partner_data, partner_col_id,
+                                                     applying_traj=True)
+    else:
+        _, new_x = Mutation.apply_mutation(opr, new_x, col_id=col_id, applying_traj=True)
+
+    return new_x
 
 
 def apply_trajectory(dataset, trajectory):
@@ -151,17 +161,5 @@ def apply_trajectory(dataset, trajectory):
         new_x = apply_operator(traj_current_member, first_member_data, second_member_data, rec=True)
     else:
         new_x = apply_operator(traj_current_member, first_member_data, None, rec=False)
-
-    return new_x
-
-
-def apply_operator(traj, data, partner_data, rec=False):
-    new_x = data.copy()
-    opr, _, col_id, _, partner_col_id = traj
-    if rec:
-        _, new_x = Recombination.apply_recombination(opr, new_x, col_id, partner_data, partner_col_id,
-                                                     applying_traj=True)
-    else:
-        _, new_x = Mutation.apply_mutation(opr, new_x, col_id=col_id, applying_traj=True)
 
     return new_x

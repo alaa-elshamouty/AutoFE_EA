@@ -121,7 +121,7 @@ class EA:
                 p=[member.fitness / sum_fitness for member in self.population]
             )
         elif self.selection == ParentSelection.TOURNAMENT:
-            tournament_size = 3
+            tournament_size = len(self.population)//2 if len(self.population)>3 else len(self.population)
             parents: List[int] = []
             for _ in range(self.num_children):
                 fighters = np.random.choice(self.population,tournament_size,replace=False)

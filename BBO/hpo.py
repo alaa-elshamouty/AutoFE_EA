@@ -19,48 +19,63 @@ class BBO:
         self.split = get_dataset_split(dataset, save)
         self.results = {}
         self.device = 'cpu' if not torch.cuda.is_available() else 'cuda'
-        acc_before_ea = self._evaluate_before_ea()
-        self.results['test_acc_before'] = acc_before_ea
         self.normalizer = normalizer
 
-    def _evaluate_before_ea(self):
-        X_train, X_test, y_train, y_test = self.split
-        classifier = TabPFNClassifier(device=self.device, N_ensemble_configurations=32)
-        acc_before_ea = self.fit_run_model(classifier, X_train, y_train, X_test, y_test)
-        return acc_before_ea
-
-    def run_ea(self, initial_X, y, params) -> Member:
+    def run_ea(self, X, y, params) -> Member:
         model = TabPFNClassifier(device=self.device, N_ensemble_configurations=32)
-        ea = EA(model=model, initial_X_train=initial_X, y_train=y, **params)
+        print('applying EA on {}'.format(self.dataset))
+        ea = EA(model=model, initial_X_train=X, y_train=y, **params)
         res = ea.optimize()
         return res
 
     def evaluate_ea(self, optimum, save=True):
-        _, X_test, y_train, y_test = self.split
+        X_train, X_test, y_train, y_test = self.split
+        classifier = TabPFNClassifier(device=self.device, N_ensemble_configurations=32)
+
+        # Before Feature Engineering
+        train_acc_before_ea,test_acc_before_ea = self.fit_run_model(classifier, X_train, y_train, X_test, y_test)
+        self.results['train_acc_before'] = train_acc_before_ea
+        self.results['test_acc_before'] = test_acc_before_ea
+
+        # After Feature Engineering
         self.results['best_member_fitness'] = optimum.fitness
         best_X_train = optimum.x_coordinate
-        self.results['best_member_X_train'] = best_X_train
-        if self.normalizer is not None:
-            _,X_test = normalize_data(self.dataset, X_test, self.normalizer, X_train=False, save=save)
+
+        if self.normalizer != None:
+            _, X_train = normalize_data(self.dataset, X_train, self.normalizer, X_train=False, save=save)
+            normalizer, X_test = normalize_data(self.dataset, X_test, self.normalizer, X_train=False, save=save)
 
         trajectory = optimum.traj
         self.results['trajectory_found'] = trajectory
+        new_x_train = apply_trajectory(X_train,trajectory)
         new_x_test = apply_trajectory(X_test, trajectory)
         if save:
-            np.save(f"results/{str(self.dataset)}/X_test_after_trajectory", X_test)
+            np.save(f"results/{str(self.dataset)}/X_train_best_member", best_X_train)
+            np.save(f"results/{str(self.dataset)}/X_train_after_trajectory", new_x_train)
+            np.save(f"results/{str(self.dataset)}/X_test_after_trajectory", new_x_test)
 
+        # Reset Model and then test on new features
         classifier = TabPFNClassifier(device=self.device, N_ensemble_configurations=32)
-        acc_after_ea = self.fit_run_model(classifier, best_X_train, y_train, new_x_test, y_test)
-        self.results['test_acc_after'] = acc_after_ea
+        train_acc_after_ea,test_acc_after_ea = self.fit_run_model(classifier, new_x_train, y_train, new_x_test, y_test)
+        self.results['train_acc_after'] = train_acc_after_ea
+        self.results['test_acc_after'] = test_acc_after_ea
         return self.results
 
     @staticmethod
     def fit_run_model(model, X_train, y_train, X_test, y_test):
         model.fit(X_train, y_train, overwrite_warning=True)
-        y_eval_before, p_eval_before = model.predict(X_test, return_winning_probability=True)
-        test_acc = accuracy_score(y_eval_before, y_test)
-        return test_acc
+        y_eval_train, p_eval_train = model.predict(X_train, return_winning_probability=True)
+        train_acc = accuracy_score(y_eval_train, y_train)
+        y_eval_test, p_eval_test = model.predict(X_test, return_winning_probability=True)
+        test_acc = accuracy_score(y_eval_test, y_test)
+        return train_acc,test_acc
+
+    @staticmethod
+    def run_model(model, X, y):
+        y_eval, p_eval_before = model.predict(X, return_winning_probability=True)
+        acc = accuracy_score(y_eval, y)
+        return acc
 
     @abstractmethod
-    def _determine_best_hypers(self,config):
+    def _determine_best_hypers(self, config):
         pass

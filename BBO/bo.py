@@ -19,7 +19,7 @@ from data.datasets_handling import normalize_data
 
 
 class BO(BBO):
-    def __init__(self, smac_type, runtime, working_dir, dataset, normalizer=None):
+    def __init__(self,dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo', normalizer=None):
         super().__init__(dataset, normalizer)
         self.cs = ConfigurationSpace()
         self.params = []
@@ -33,11 +33,11 @@ class BO(BBO):
         # To illustrate different parameter types,
         # we use continuous, integer and categorical parameters.
         normalize_before_ea = CS.CategoricalHyperparameter('normalize', choices=['True', 'False'], default_value='True')
-        max_func_evals = CS.UniformIntegerHyperparameter("total_number_of_function_evaluations", 1, 4, default_value=3)
-        pop_size = CS.UniformIntegerHyperparameter("population_size", 2, 10, default_value=3)
+        max_func_evals = CS.UniformIntegerHyperparameter("total_number_of_function_evaluations", 10, 100, default_value=50)
+        pop_size = CS.UniformIntegerHyperparameter("population_size", 100, 1000, default_value=500)
         fraction_mutation = CS.UniformFloatHyperparameter('fraction_mutation', lower=0., upper=1., default_value=0.7)
-        children_per_step = CS.UniformIntegerHyperparameter("children_per_step", 1, 10, default_value=4)
-        max_pop_size = CS.UniformIntegerHyperparameter("max_pop_size", 1, 3, default_value=1)
+        children_per_step = CS.UniformIntegerHyperparameter("children_per_step", 20, 100, default_value=40)
+        max_pop_size = CS.UniformIntegerHyperparameter("max_pop_size", 1, 10, default_value=1)
         parent_selection = CS.CategoricalHyperparameter('selection_type',
                                                         choices=[0,1,2],
                                                         default_value=0)
@@ -52,35 +52,18 @@ class BO(BBO):
         self.cs.add_hyperparameter(config)
 
     def _determine_best_hypers(self, config):
-        X_train, X_test, y_train, y_test = self.split
+        X_train, _, y_train, _ = self.split
         np.random.seed(0)  # fix seed for comparison
         normalize = config['normalize'] == 'True' if 'normalize' in config else True
         if normalize:
-            normalizer, X_train = normalize_data(self.dataset, X_train, X_train=True)
+            normalizer, X_train = normalize_data(self.dataset, X_train, normalizer =None, X_train=True, save=True)
             self.normalizer = normalizer
         print('Setting up EA...')
         # setting EA parameters
         self.results['EA_params'] = config
 
-        optimum = self.run_ea(initial_X=X_train, y=y_train, params=config)
+        optimum = self.run_ea(X=X_train, y=y_train, params=config)
         return 1 - optimum.fitness
-
-    def _write_combined_runs(self, scenario, directory):
-
-        """
-        Constructs the combined run files for the parallel smac run
-        @param scenario: Scenario object
-        @param directory: directory where the combined run is written
-        """
-        pattern = r'run_\d$'
-        result_merger = ResultMerger(output_dir=str(directory), rundir_pattern=pattern)
-        output_writer = OutputWriter()
-
-        output_writer.save_configspace(self.cs, str(directory / 'configspace.json'), 'json')
-        output_writer.save_configspace(self.cs, str(directory / 'configspace.pcs'), 'pcs_new')
-        output_writer.write_scenario_file(scenario)
-        result_merger.write_runhistory()
-        result_merger.write_trajectory()
 
     def run_bo_parallel(self):
         working_dir = self.working_dir + '/' + self.smac_type + '/' + self.dataset
@@ -152,7 +135,7 @@ class BO(BBO):
         scenario = Scenario(
             {
                 "run_obj": "quality",  # we optimize quality (alternative to runtime)
-                "wallclock-limit": 3600,  # max duration to run the optimization (in seconds)
+                "wallclock-limit": self.runtime,  # max duration to run the optimization (in seconds)
                 "cs": self.cs,  # configuration space
                 "deterministic": True,
                 # Uses pynisher to limit memory and runtime
@@ -183,9 +166,8 @@ class BO(BBO):
         finally:
             incumbent = smac.solver.incumbent
 
-        inc_value = tae.run(config=incumbent)[1]
         opt_config = incumbent.get_dictionary()
 
         with open(working_dir + '/opt_cfg.json', 'w') as f:
             json.dump(opt_config, f)
-        return incumbent
+        return opt_config
