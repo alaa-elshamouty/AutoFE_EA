@@ -16,7 +16,7 @@ if __name__ == "__main__":
         # get the best hyperparameters for EA
         incumbent = bo.run_bo()
         # Run EA with best hyperparameters
-        optimum = bo.run_ea(initial_X=X_train, y=y_train, params=incumbent)
+        optimum = bo.run_ea(X=X_train, y=y_train, params=incumbent)
         # Evaluate on X_test
         results = bo.evaluate_ea(optimum)
         with open(f'results/{str(dataset)}/{str(dataset)}_results.pkl', 'wb') as f:
