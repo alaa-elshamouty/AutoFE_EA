@@ -1,5 +1,29 @@
-from sklearn.datasets import load_iris, load_digits
+from sklearn.datasets import load_iris, load_digits, load_wine
 
+open_cc_dids = {
+ 15:'breast-w', #crashes,
+ 29:'credit-approval', #nominal crashes
+ 50:'tic-tac-toe', #nominal
+ 54:'vehicle', #nominal
+ 188:'eucalyptus', #nominal crashes
+ 458:'analcatdata_authorship',
+ 469:'analcatdata_dmft', #nominal
+ 1049:' pc4',
+ 1050:'pc3',
+ 1063:'kc2',
+ 1068:'pc1',
+ 1510: 'wdbc',
+ 1494:'qsar-biodeg',
+ 1480:'ilpd',
+ 1462:'banknote-authentication',
+ 1464:'blood-transfusion-service-center',
+ 6332:'cylinder-bands', #nominal crashed
+ 23381:'dresses-sales', #nominal crashed
+ 40966:'MiceProtein', #has id nominal crashed
+ 40982:' steel-plates-fault',
+ 40994:'climate-model-simulation-crashes',
+ 40975:' car'#nominal
+}
 open_ml_name_dict = {
     11: 'balance-scale',
     18: 'mfeat-morphological',
@@ -11,5 +35,7 @@ open_ml_name_dict = {
     14: 'mfeat-fourier'
 }
 open_ml_ids = list(open_ml_name_dict.keys())
-sklearn_dataloaders = [load_digits,load_iris]
-datasets = sklearn_dataloaders + open_ml_ids
+open_cc_ids = list(open_cc_dids.keys())
+sklearn_dataloaders = [load_digits,load_iris,load_wine]
+datasets = sklearn_dataloaders + open_ml_ids + open_cc_ids
+#datasets= open_cc_ids[13:]#open_ml_ids[4:]
