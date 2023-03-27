@@ -4,6 +4,8 @@ import openml as openml
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
+from utilities import check_all
+
 
 def load_openml_dataset(id):
     dataset = openml.datasets.get_dataset(id)
@@ -33,6 +35,7 @@ def get_dataset_split(dataset,save=True):
 
     else:
         X, y = load_dataset(id=dataset)
+    X = check_all(X,lower=-10,upper=10,max_dims=100)
     print('Splitting Dataset...')
     split = train_test_split(X, y, test_size=0.33, random_state=42)
     if save:
@@ -44,10 +47,12 @@ def get_dataset_split(dataset,save=True):
     return split
 
 def normalize_data(dataset, data, normalizer =None, X_train=True, save=True):
+    data_copy = data.copy()
+    data_copy = check_all(data_copy, lower=-10, upper=10, max_dims=100)
     if X_train:
         normalizer = preprocessing.Normalizer()
     name = 'normalized_X_train' if X_train else 'normalized_X_test'
-    normalized_data = normalizer.fit_transform(data) if X_train else normalizer.transform(data)
+    normalized_data = normalizer.fit_transform(data_copy) if X_train else normalizer.transform(data_copy)
     if save:
         np.save(f"results/{str(dataset)}/{name}", normalized_data)
     return normalizer,normalized_data
