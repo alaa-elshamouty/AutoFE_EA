@@ -218,4 +218,5 @@ class EA:
                 print("\n".join(lines))
             step += 1
             pbar.update(after - before)
+        pbar.close()
         return self.population[0]
