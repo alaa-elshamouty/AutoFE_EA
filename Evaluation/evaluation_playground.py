@@ -9,7 +9,8 @@ import plotly.figure_factory as ff
 
 from plotly.subplots import make_subplots
 
-directory = '../results/'
+#directory = '../results/'
+directory = '../results_backup/results_backup_24_03_23_14_00/results/'
 
 
 def get_before_after_acc():
@@ -154,7 +155,36 @@ def plot_distribution_per_dataset(dataset_name, X_train_before, X_train_after, X
         fig.write_html("{}/distribution_f{}.html".format(dir, feature_id))
 
 
-plot_before_after_acc()
+def plot_bar_diff():
+    df = pd.read_csv("../results_backup/results_backup_27_03_23_14_45/evaluation/results_before_after_df.csv")
+    df["train_diff"] = df['after_train'] - df["before_train"]
+    df["test_diff"] = df['after_test'] - df["before_test"]
+    train_diff_avg = df["train_diff"].average()
+
+    names = df['name'].values
+    fig = go.Figure(data=[
+        go.Bar(name='Train Difference', x=names, y=df['train_diff']),
+        go.Bar(name='Test Difference', x=names, y=df['test_diff'])
+    ])
+    # Change the bar mode
+    fig.update_layout(barmode='group')
+    fig.write_html("diff_barplot.html")
+
+def opt_config_parallel_coords():
+    df = pd.read_csv("opt_configs_combined.csv")
+    fig = px.parallel_coordinates(df,
+                                  dimensions=list(df.keys()),
+                                  color_continuous_scale=px.colors.diverging.Tealrose,
+                                  color_continuous_midpoint=2)
+    fig.write_html("opt_configs.html")
+
+plot_bar_diff()
+#opt_config_parallel_coords()
+
+exit()
+
+print("dummy for debug")
+#plot_before_after_acc()
 #plot_bars_before_after()
 exit()
 folder = '31'
