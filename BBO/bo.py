@@ -33,17 +33,17 @@ class BO(BBO):
         # To illustrate different parameter types,
         # we use continuous, integer and categorical parameters.
         normalize_before_ea = CS.CategoricalHyperparameter('normalize', choices=['True', 'False'], default_value='True')
-        max_func_evals = CS.UniformIntegerHyperparameter("total_number_of_function_evaluations", 10, 100, default_value=50)
-        pop_size = CS.UniformIntegerHyperparameter("population_size", 100, 1000, default_value=500)
+        max_func_evals = CS.UniformIntegerHyperparameter("total_number_of_function_evaluations", 1, 10, default_value=3)
+        pop_size = CS.UniformIntegerHyperparameter("population_size", 3, 50, default_value=3)
         fraction_mutation = CS.UniformFloatHyperparameter('fraction_mutation', lower=0., upper=1., default_value=0.7)
-        children_per_step = CS.UniformIntegerHyperparameter("children_per_step", 20, 100, default_value=40)
+        children_per_step = CS.UniformIntegerHyperparameter("children_per_step", 5, 20, default_value=5)
         max_pop_size = CS.UniformIntegerHyperparameter("max_pop_size", 1, 10, default_value=1)
         parent_selection = CS.CategoricalHyperparameter('selection_type',
                                                         choices=[0,1,2],
                                                         default_value=0)
 
         self.params = [normalize_before_ea, max_func_evals, pop_size, fraction_mutation, children_per_step,
-                       max_pop_size, parent_selection]
+                       max_pop_size, parent_selection,regularizer]
 
         self.cs.add_hyperparameters(self.params)
 
