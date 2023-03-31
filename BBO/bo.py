@@ -41,6 +41,7 @@ class BO(BBO):
         parent_selection = CS.CategoricalHyperparameter('selection_type',
                                                         choices=[0,1,2],
                                                         default_value=0)
+        regularizer = CS.UniformIntegerHyperparameter("regularizer", 1, 10, default_value=3)
 
         self.params = [normalize_before_ea, max_func_evals, pop_size, fraction_mutation, children_per_step,
                        max_pop_size, parent_selection,regularizer]

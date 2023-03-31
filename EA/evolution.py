@@ -27,6 +27,7 @@ class EA:
             fraction_mutation: float = 0.5,
             max_pop_size: int = 20,
             normalize: bool = True,
+            regularizer: int =3,
 
     ):
         """
@@ -92,6 +93,7 @@ class EA:
         self._func_evals = population_size
         self.max_pop_size = max_pop_size * self.pop_size #* self.num_children
         self.normalize=normalize
+        self.regularizer = regularizer
         # will store the optimization trajectory and lets you easily observe how
         # often a new best member was generated
         self.trajectory = [self.population[0]]
@@ -177,7 +179,7 @@ class EA:
             # Resort the population based on age
             self.population.sort(key=lambda x: x._age,reverse=True)
             # Reduce the population
-            self.population = self.population[self.pop_size:]
+            self.population = self.population[self.regularizer:]
             # Resort the population based on Fitness again
             self.population.sort(key=lambda x: x.fitness, reverse=True)
 
