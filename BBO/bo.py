@@ -25,6 +25,8 @@ class BO(BBO):
         self.params = []
         self.smac_type = smac_type
         self.runtime = runtime
+        if not os.path.exists(working_dir):
+            os.mkdir(working_dir)
         self.working_dir = working_dir
         self._setup_initial_config_space()
 
@@ -128,7 +130,7 @@ class BO(BBO):
         return incumbent
 
     def run_bo(self):
-        working_dir = self.working_dir + '/' + self.smac_type + '/' + str(self.dataset)
+        working_dir = os.path.join(self.working_dir, str(self.dataset))
         if not os.path.exists(working_dir):
             os.mkdir(working_dir)
         # cs.add_hyperparameter(Constant('device', device))
@@ -160,7 +162,11 @@ class BO(BBO):
             tae_runner=self._determine_best_hypers,
             intensifier_kwargs=intensifier_kwargs,
         )
-        tae = smac.get_tae_runner()
+        runs_working_dir = os.path.join(working_dir,'runs')
+        if not os.path.exists(runs_working_dir):
+            os.mkdir(runs_working_dir)
+        #scenario.output_dir = runs_working_dir
+        smac.output_dir = runs_working_dir
         # Start optimization
         try:
             incumbent = smac.optimize()

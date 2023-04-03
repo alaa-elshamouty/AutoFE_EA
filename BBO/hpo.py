@@ -1,3 +1,4 @@
+import os.path
 from abc import abstractmethod
 
 import numpy as np
@@ -15,6 +16,8 @@ import torch
 class BBO:
     # apply configuration space params
     def __init__(self, dataset, normalizer, save=True):
+        if not os.path.exists('results'):
+            os.makedirs('results')
         self.dataset = dataset
         self.split = get_dataset_split(dataset, save)
         self.results = {}
