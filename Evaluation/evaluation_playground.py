@@ -9,8 +9,8 @@ import plotly.figure_factory as ff
 
 from plotly.subplots import make_subplots
 
-#directory = '../results/'
-directory = '../results_backup/results_backup_24_03_23_14_00/results/'
+directory = '../results/'
+#directory = '../results_backup/results_backup_24_03_23_14_00/results/'
 
 
 def get_before_after_acc():
@@ -20,6 +20,7 @@ def get_before_after_acc():
     before_test = []
     after_test = []
     trajs = []
+    fitness_trajs = []
     names = []
     for dataset_folder in os.listdir(directory):
         for filename in os.listdir(directory + dataset_folder):
@@ -33,6 +34,7 @@ def get_before_after_acc():
                     before_test.append(loaded_dict['test_acc_before'])
                     after_test.append((loaded_dict['test_acc_after']))
                     trajs.append(loaded_dict['trajectory_found'])
+                    fitness_trajs.append((loaded_dict['fitness_trajectory']))
                     names.append(filename)
                     break
     df = pd.DataFrame(data={
@@ -42,18 +44,19 @@ def get_before_after_acc():
         'before_test': before_test,
         'after_test': after_test,
         'trajs': trajs,
+        'fitness_traj': fitness_trajs,
         'name': names
     })
     df.to_csv('results_before_after_df.csv')
 
-    return before_train, best_member, after_train, before_test, after_test, trajs
+    return before_train, best_member, after_train, before_test, after_test, trajs, fitness_trajs
 
 
 def plot_before_after_acc(load_file=False):
     if load_file:
         df = pd.read_csv('results_before_after_df.csv')
     else:
-        before_train, best_member, after_train, before_test, after_test, trajs = get_before_after_acc()
+        before_train, best_member, after_train, before_test, after_test, trajs, fitness_trajs = get_before_after_acc()
         df = pd.DataFrame(data={
             'before_train': before_train,
             'best_member': best_member,
@@ -178,14 +181,23 @@ def opt_config_parallel_coords():
                                   color_continuous_midpoint=2)
     fig.write_html("opt_configs.html")
 
-plot_bar_diff()
+
+def plot_fitness_traj():
+    before_train, best_member, after_train, before_test, after_test, trajs, fitness_trajs = get_before_after_acc()
+    fitness_df = pd.DataFrame(data={
+        'steps': range(0, len(fitness_trajs[0])),
+        'fitness': [score for opr, score in fitness_trajs[0]]
+    })
+    fig = px.line(fitness_df, x="steps", y="fitness", title='Fitness Trajectory')
+    fig.write_html("fitness_traj.html")
+
+
+#plot_fitness_traj()
+#plot_bar_diff()
 #opt_config_parallel_coords()
-
-exit()
-
 print("dummy for debug")
-#plot_before_after_acc()
-#plot_bars_before_after()
+plot_before_after_acc()
+plot_bars_before_after()
 exit()
 folder = '31'
 X_train_before, X_train_after, X_test_before, X_test_after, result_dict = get_dataset_train_test(

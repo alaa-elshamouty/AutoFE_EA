@@ -1,23 +1,15 @@
 import os
 import pickle
-import re
+
+from utilities import get_opr_name
 
 # read trajectories
 duplicated_oprs_all = []
 main_directory = '../results_backup/'
 
-one_time_oprs = ['StandardScaler',
-                 'RandomTreesEmbedding',
+one_time_oprs = ['RandomTreesEmbedding',
                  'RBFSampler',
                  'QuantileTransformer']
-
-
-def get_opr_name(opr):
-    opr_str = str(opr)
-    opr_str_clean = re.sub(r'\([^)]*\)', '', opr_str)
-    opr_str_clean = re.sub(r'<ufunc \'', '', opr_str_clean)
-    opr_str_clean = re.sub(r'\'>', '', opr_str_clean)
-    return opr_str_clean
 
 
 def get_operators(trajectory, illegal_duplicate_oprs=[], seen_oprs=[]):
@@ -70,7 +62,6 @@ for result_folder in os.listdir(main_directory):
                         duplicated_oprs_all.extend(illegal_duplicated_oprs)
 
 import plotly.express as px
-import numpy as np
 import pandas as pd
 df = pd.DataFrame(data={
     'opr':duplicated_oprs_all
