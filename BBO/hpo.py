@@ -39,6 +39,7 @@ class BBO:
 
         # After Feature Engineering
         self.results['best_member_fitness'] = optimum.fitness
+        self.results['fitness_trajectory'] = optimum.fitness_traj
         best_X_train = optimum.x_coordinate
 
         if self.normalizer != None:

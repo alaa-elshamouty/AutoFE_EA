@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 
 from EA.strategies import Mutation, Recombination, Combiner
-
+from utilities import get_opr_name
 
 
 class Member:
@@ -21,7 +21,9 @@ class Member:
             model: Callable,
             mutation: Mutation,
             recombination: Recombination,
-            trajectory: Tuple = (None, None, None, None, None),
+            trajectory=(None, None, None, None, None),
+            fitness_trajectory: List = [],
+            seen_operators: set = set()
     ) -> None:
         """
         Parameters
@@ -60,6 +62,8 @@ class Member:
         self._fit_train = 0.0
         self._fit_test = 0.0
         self.traj = trajectory
+        self.fitness_traj = fitness_trajectory
+        self.seen_oprs = seen_operators
 
     @property
     def fitness(self) -> float:
@@ -113,9 +117,12 @@ class Member:
 
         if self._mutation == Mutation.UNIFORM:
             col_id = np.random.randint(new_x.shape[-1])
-            opr_info = Combiner.get_random_mutation_opr()
+            opr_info = Combiner.get_random_mutation_opr(self.seen_oprs)
+            opr_name = get_opr_name(opr_info[0])
             opr, new_x = Mutation.apply_mutation(opr_info, new_x, y=self._y_train, col_id=col_id)
-            trajectory = [(opr, self._id, col_id, None, None), self.traj, None]
+            trajectory = [(opr_name, self._id, col_id, None, None), self.traj, None]
+            self.fitness_traj.append((opr_name, self.fitness))
+            self.seen_oprs.add(opr_name)
         elif self._mutation == Mutation.WEIGHTED:
             raise NotImplementedError
 
@@ -125,6 +132,7 @@ class Member:
         else:
             # We won't consider any other mutation types
             raise RuntimeError(f"Unknown mutation {self._mutation}")
+
         child = Member(
             new_x,
             self._y_train,
@@ -132,6 +140,8 @@ class Member:
             self._mutation,
             self._recombination,
             trajectory,
+            self.fitness_traj,
+            self.seen_oprs,
         )
         self._age += 1
         return child
@@ -158,12 +168,14 @@ class Member:
 
         elif self._recombination == Recombination.UNIFORM:
             opr_info = Combiner.get_random_crossover_opr()
+            opr_name = get_opr_name(opr_info)
             col_id = np.random.randint(new_x.shape[-1])
             partner_col_id = np.random.randint(partner.x_coordinate.shape[-1])
             opr, new_x = Recombination.apply_recombination(opr_info, new_x, col_id, partner.x_coordinate,
                                                            partner_col_id)
             trajectory = [(opr, self._id, col_id, partner._id, partner_col_id), self.traj, partner.traj]
-
+            self.fitness_traj.append((opr_name, self.fitness))
+            self.seen_oprs.add(opr_name)
         elif self._recombination == Recombination.NONE:
             # copy is important here to not only get a reference
             new_x = self.x_coordinate.copy()
@@ -180,6 +192,7 @@ class Member:
             self._mutation,
             self._recombination,
             trajectory,
+            self.fitness_traj
         )
         self._age += 1
         return child

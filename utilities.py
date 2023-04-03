@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
@@ -36,3 +38,10 @@ def check_values(lower, new_x, upper):
         new_x = x
     return new_x
 
+
+def get_opr_name(opr):
+    opr_str = str(opr)
+    opr_str_clean = re.sub(r'\([^)]*\)', '', opr_str)
+    opr_str_clean = re.sub(r'<ufunc \'', '', opr_str_clean)
+    opr_str_clean = re.sub(r'\'>', '', opr_str_clean)
+    return opr_str_clean

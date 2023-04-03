@@ -9,12 +9,15 @@ from sklearn.impute import SimpleImputer
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.preprocessing import StandardScaler, QuantileTransformer, PolynomialFeatures
 
-from utilities import check_all
+from utilities import check_all, get_opr_name
 
 
 class Combiner:
+    one_time_oprs = ['RandomTreesEmbedding',
+                     'RBFSampler',
+                     'QuantileTransformer']
     @staticmethod
-    def get_random_mutation_opr():
+    def get_random_mutation_opr(seen_oprs):
         single_ops = [(None, {}),
                       (StandardScaler, {}),
                       (SimpleImputer, {'strategy': 'mean', 'copy': False}),
@@ -28,7 +31,8 @@ class Combiner:
                       (QuantileTransformer, {}),
                       (np.log, {}), (np.delete, {}), (np.power, {}),
                       (PCA, {})]
-        return random.choice(single_ops)
+        single_ops_filtered = [opr_info for opr_info in single_ops if not (get_opr_name(opr_info[0]) in seen_oprs and get_opr_name(opr_info[0]) in Combiner.one_time_oprs)]
+        return random.choice(single_ops_filtered)
 
     @staticmethod
     def get_random_crossover_opr():
@@ -82,7 +86,7 @@ class Mutation(IntEnum):
 
     @staticmethod
     def apply_mutation(opr_info, x, y=None, col_id=None, lower=-10, upper=10, max_dims=100,
-                       applying_traj=False):
+                       applying_traj=False,):
         new_x = x.copy()
         if applying_traj:
             opr_class = opr_info
