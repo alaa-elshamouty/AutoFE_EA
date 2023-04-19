@@ -35,18 +35,18 @@ class BO(BBO):
         # To illustrate different parameter types,
         # we use continuous, integer and categorical parameters.
         normalize_before_ea = CS.CategoricalHyperparameter('normalize', choices=['True', 'False'], default_value='True')
-        max_func_evals = CS.UniformIntegerHyperparameter("total_number_of_function_evaluations", 1, 10, default_value=3)
-        pop_size = CS.UniformIntegerHyperparameter("population_size", 3, 50, default_value=3)
-        fraction_mutation = CS.UniformFloatHyperparameter('fraction_mutation', lower=0., upper=1., default_value=0.7)
-        children_per_step = CS.UniformIntegerHyperparameter("children_per_step", 5, 20, default_value=5)
-        max_pop_size = CS.UniformIntegerHyperparameter("max_pop_size", 1, 10, default_value=1)
+        max_func_evals = CS.CategoricalHyperparameter('total_number_of_function_evaluations', choices=[100,500,1000,10000], default_value=500)
+        pop_size = CS.CategoricalHyperparameter('population_size', choices=[1,3,10,100], default_value=3)
+        fraction_mutation = CS.UniformFloatHyperparameter('fraction_mutation', lower=0., upper=1., default_value=0.5)
+        children_per_step = CS.CategoricalHyperparameter('children_per_step', choices=[1, 3, 10, 100], default_value=1)
+        max_pop_size = CS.CategoricalHyperparameter('max_pop_size', choices=[0, 10, 100], default_value=0)
         parent_selection = CS.CategoricalHyperparameter('selection_type',
-                                                        choices=[0,1,2],
+                                                        choices=[0, 1, 2],
                                                         default_value=0)
-        regularizer = CS.UniformIntegerHyperparameter("regularizer", 1, 10, default_value=3)
+        regularizer = CS.UniformFloatHyperparameter("regularizer", 0,1 , default_value=0.25)
 
         self.params = [normalize_before_ea, max_func_evals, pop_size, fraction_mutation, children_per_step,
-                       max_pop_size, parent_selection,regularizer]
+                       max_pop_size, parent_selection, regularizer]
 
         self.cs.add_hyperparameters(self.params)
 
@@ -150,8 +150,8 @@ class BO(BBO):
                 'verbose': 'DEBUG',  # adapt this to reasonable value for your hardware
             }
         )
-        # max budget for hyperband can be anything. Here, we set it to maximum no. of epochs to train the MLP for
-        max_epochs = 50
+        # max budget for hyperband
+        max_epochs = 100
         # intensifier parameters (Budget parameters for BOHB)
         intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_epochs, 'eta': 3}
 

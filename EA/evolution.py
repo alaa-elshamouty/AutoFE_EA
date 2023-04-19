@@ -27,7 +27,7 @@ class EA:
             fraction_mutation: float = 0.5,
             max_pop_size: int = 20,
             normalize: bool = True,
-            regularizer: int =3,
+            regularizer: float = 0.75,
 
     ):
         """
@@ -84,15 +84,14 @@ class EA:
             for _ in range(population_size)
         ]
         self.population.sort(key=lambda x: x.fitness)
-        dimensionality = initial_X_train.shape[-1]  # number of columns
         self.pop_size = population_size
         self.selection = selection_type
-        self.max_func_evals = total_number_of_function_evaluations * dimensionality
+        self.max_func_evals = total_number_of_function_evaluations
         self.num_children = children_per_step
         self.frac_mutants = fraction_mutation
         self._func_evals = population_size
-        self.max_pop_size = max_pop_size * self.pop_size #* self.num_children
-        self.normalize=normalize
+        self.max_pop_size = max_pop_size
+        self.normalize = normalize
         self.regularizer = regularizer
         # will store the optimization trajectory and lets you easily observe how
         # often a new best member was generated
@@ -113,7 +112,7 @@ class EA:
             The indices of the parents in the sorted population
         """
         if self.selection == ParentSelection.NEUTRAL:
-            parents = np.random.choice(self.population,self.num_children)
+            parents = np.random.choice(self.population, self.num_children)
 
         elif self.selection == ParentSelection.FITNESS:
             sum_fitness = sum([m.fitness for m in self.population])
@@ -123,10 +122,10 @@ class EA:
                 p=[member.fitness / sum_fitness for member in self.population]
             )
         elif self.selection == ParentSelection.TOURNAMENT:
-            tournament_size = len(self.population)//2 if len(self.population)>3 else len(self.population)
+            tournament_size = len(self.population) // 2 if len(self.population) > 3 else len(self.population)
             parents: List[int] = []
             for _ in range(self.num_children):
-                fighters = np.random.choice(self.population,tournament_size,replace=False)
+                fighters = np.random.choice(self.population, tournament_size, replace=False)
                 fitness = [fighter.fitness for fighter in fighters]
                 winner_id = np.argmax(fitness)
                 parents.append(fighters[winner_id])
@@ -174,16 +173,23 @@ class EA:
         # Resort the population based on Fitness
         self.population.sort(key=lambda x: x.fitness, reverse=True)
 
-        if len(self.population) > self.max_pop_size:
-            print('Regularizing :: population number: {}, max_pop_size: {}'.format(len(self.population),self.max_pop_size))
+        # if len(self.population) > self.max_pop_size:
+        if (self.max_pop_size > 0) and (len(self.population) % self.max_pop_size == 0):
+            print('Regularizing :: population number: {}, percentage remove: {}'.format(len(self.population),
+                                                                                        self.regularizer))
+            keep = int((1 - self.regularizer) * len(self.population))
             # Resort the population based on age
-            self.population.sort(key=lambda x: x._age,reverse=True)
+            # self.population.sort(key=lambda x: x._age,reverse=True)
             # Reduce the population
-            self.population = self.population[self.regularizer:]
+            # self.population = self.population[:2] + self.population[3+self.regularizer:]
+            # self.population = self.population[:-self.regularizer]
+            self.population = self.population[:keep]
+            # self.population = self.population[:-int(len(self.population)/4)]
+            # self.population = self.population[:5]
             # Resort the population based on Fitness again
-            self.population.sort(key=lambda x: x.fitness, reverse=True)
+            # self.population.sort(key=lambda x: x.fitness, reverse=True)
 
-        print('Normal :: population number: {}, max_pop_size: {}'.format(len(self.population), self.max_pop_size))
+        print('Normal :: population number: {}, percentage remove: {}'.format(len(self.population), self.regularizer))
         # Append the best Member to the trajectory
         self.trajectory.append(self.population[0])
 

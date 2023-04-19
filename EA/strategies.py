@@ -26,7 +26,7 @@ class Combiner:
                       (FeatureAgglomeration, {}),
                       (KernelPCA, {}),
                       (RBFSampler, {}),
-                      (SelectPercentile, {'percentile': 50}),
+                      (SelectPercentile, {'percentile': 90}),
                       (TruncatedSVD, {}),
                       (QuantileTransformer, {}),
                       (np.log, {}), (np.delete, {}), (np.power, {}),
