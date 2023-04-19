@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 
 from EA.strategies import Mutation, Recombination, Combiner
-from utilities import get_opr_name
+from utilities import get_opr_name, check_all
 
 
 class Member:
@@ -114,13 +114,13 @@ class Member:
             The mutated Member created from this member
         """
         new_x = self.x_coordinate.copy()
-
+        new_x = check_all(new_x,lower=-10,upper=10,max_dims=100)
         if self._mutation == Mutation.UNIFORM:
             col_id = np.random.randint(new_x.shape[-1])
             opr_info = Combiner.get_random_mutation_opr(self.seen_oprs)
             opr_name = get_opr_name(opr_info[0])
             opr, new_x = Mutation.apply_mutation(opr_info, new_x, y=self._y_train, col_id=col_id)
-            trajectory = [(opr_name, self._id, col_id, None, None), self.traj, None]
+            trajectory = [(opr, self._id, col_id, None, None), self.traj, None]
             self.fitness_traj.append((opr_name, self.fitness))
             self.seen_oprs.add(opr_name)
         elif self._mutation == Mutation.WEIGHTED:
@@ -162,6 +162,7 @@ class Member:
         # TODO
         # ----------------
         new_x = self.x_coordinate.copy()
+        new_x = check_all(new_x,lower=-10,upper=10,max_dims=100)
         if self._recombination == Recombination.WEIGHTED:
             raise NotImplementedError
         # ----------------

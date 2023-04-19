@@ -8,7 +8,7 @@ from sklearn.impute import SimpleImputer
 
 def check_all(new_x, lower, upper, max_dims):
     new_x = check_values(lower, new_x, upper)
-    new_x = check_nan(new_x)
+    new_x = check_nan_and_zeros(new_x)
     new_x = check_dims(max_dims, new_x)
     return new_x
 
@@ -21,11 +21,12 @@ def check_dims(max_dims, new_x):
     return new_x
 
 
-def check_nan(new_x):
+def check_nan_and_zeros(new_x):
     if np.any(np.isnan(new_x)):
         print('found NaN values, applying Simple Imputer')
         imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
         new_x = imp_mean.fit_transform(new_x)
+    new_x[new_x == 0] = 0.000001
     return new_x
 
 
