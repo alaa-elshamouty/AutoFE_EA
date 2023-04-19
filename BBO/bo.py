@@ -2,6 +2,7 @@ import json
 import os
 
 import numpy as np
+import wandb
 from smac.facade.experimental.psmac_facade import PSMAC
 
 from BBO.hpo import BBO
@@ -19,8 +20,8 @@ from data.datasets_handling import normalize_data
 
 
 class BO(BBO):
-    def __init__(self,dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo', normalizer=None):
-        super().__init__(dataset, normalizer)
+    def __init__(self, job_name,dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo', normalizer=None):
+        super().__init__(job_name,dataset, normalizer)
         self.cs = ConfigurationSpace()
         self.params = []
         self.smac_type = smac_type
@@ -29,6 +30,8 @@ class BO(BBO):
             os.mkdir(working_dir)
         self.working_dir = working_dir
         self._setup_initial_config_space()
+
+
 
     def _setup_initial_config_space(self):
         # Build Configuration Space which defines all parameters and their ranges.
@@ -55,6 +58,7 @@ class BO(BBO):
         self.cs.add_hyperparameter(config)
 
     def _determine_best_hypers(self, config):
+        #wandb.config = config
         X_train, _, y_train, _ = self.split
         np.random.seed(0)  # fix seed for comparison
         normalize = config['normalize'] == 'True' if 'normalize' in config else True
@@ -66,70 +70,18 @@ class BO(BBO):
         self.results['EA_params'] = config
 
         optimum = self.run_ea(X=X_train, y=y_train, params=config)
+        #wandb.log({'bo_score': 1 - optimum.fitness})
         return 1 - optimum.fitness
 
-    def run_bo_parallel(self):
-        working_dir = self.working_dir + '/' + self.smac_type + '/' + self.dataset
-
-        # cs.add_hyperparameter(Constant('device', device))
-        # SMAC scenario object
-        scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                             "wallclock-limit": self.runtime,  # max duration to run the optimization (in seconds)
-                             "cs": self.cs,  # configuration space
-                             'output-dir': working_dir,  # working directory where intermediate results are stored
-                             "deterministic": "true",
-                             # "limit_resources": True,  # Uses pynisher to limit memory and runtime
-                             # Then you should handle runtime and memory yourself in the TA
-                             # If you train the model on a CUDA machine, then you need to disable this option
-                             "memory_limit": 8119,  # adapt this to reasonable value for your hardware
-                             })
-
-        # max budget for hyperband can be anything. Here, we set it to maximum no. of epochs to train the MLP for
-        max_epochs = 50
-        # intensifier parameters (Budget parameters for BOHB)
-
-        n_workers = 5
-        intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_epochs, 'eta': 3}
-
-        # To optimize, we pass the function to the SMAC-object
-
-        if self.smac_type == 'BOHB':
-            intensifier = Hyperband
-        elif self.smac_type == 'BOSH':
-            intensifier = SuccessiveHalving
-        else:
-            raise ValueError('SMAC type can be either BOHB or BOSH')
-
-        smac = PSMAC(
-            facade_class=SMAC4MF,
-            validate=False,
-            n_workers=n_workers,
-            shared_model=True,
-            scenario=scenario,
-            rng=np.random.RandomState(42),
-            tae_runner=self._determine_best_hypers,
-            intensifier=intensifier,
-            intensifier_kwargs=intensifier_kwargs,
-            # all arguments related to intensifier can be passed like this
-            initial_design_kwargs={'n_configs_x_params': 1,  # how many initial configs to sample per parameter
-                                   'max_config_fracs': .2})
-        # We have to set the output directories manually for psmac
-        scenario.output_dir = working_dir
-        scenario.output_dir_for_this_run = working_dir
-        smac.output_dir = working_dir
-
-        # Start optimization
-        incumbent = smac.optimize()
-        # combine parallel run and save it into directory
-        # self._write_combined_runs(scenario, working_dir)
-        # store your optimal configuration to disk
-        opt_config = incumbent.get_dictionary()
-
-        with open(working_dir + '/opt_cfg.json', 'w') as f:
-            json.dump(opt_config, f)
-        return incumbent
-
     def run_bo(self):
+        dataset_name = str(self.dataset)
+        # wandb.init(
+        #     project=f'BO{self.job_name}',
+        #     name=dataset_name,
+        #     notes=f'Determinig best hyperparameters, BO',
+        #     job_type='BO',
+        #     tags=[dataset_name]
+        # )
         working_dir = os.path.join(self.working_dir, str(self.dataset))
         if not os.path.exists(working_dir):
             os.mkdir(working_dir)
@@ -145,7 +97,7 @@ class BO(BBO):
                 # Alternatively, you can also disable this.
                 # Then you should handle runtime and memory yourself in the TA
                 "limit_resources": False,
-                "cutoff": 100,  # runtime limit for target algorithm
+                "cutoff": 1000,  # runtime limit for target algorithm
                 "memory_limit": 8119,
                 'verbose': 'DEBUG',  # adapt this to reasonable value for your hardware
             }
@@ -162,10 +114,10 @@ class BO(BBO):
             tae_runner=self._determine_best_hypers,
             intensifier_kwargs=intensifier_kwargs,
         )
-        runs_working_dir = os.path.join(working_dir,'runs')
+        runs_working_dir = os.path.join(working_dir, 'runs')
         if not os.path.exists(runs_working_dir):
             os.mkdir(runs_working_dir)
-        #scenario.output_dir = runs_working_dir
+        # scenario.output_dir = runs_working_dir
         smac.output_dir = runs_working_dir
         # Start optimization
         try:
@@ -173,6 +125,7 @@ class BO(BBO):
         finally:
             incumbent = smac.solver.incumbent
 
+        #wandb.finish()
         opt_config = incumbent.get_dictionary()
 
         with open(working_dir + '/opt_cfg.json', 'w') as f:

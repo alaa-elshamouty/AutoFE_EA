@@ -11,13 +11,14 @@ from EA.strategies import apply_trajectory
 from data.datasets_handling import get_dataset_split, normalize_data
 from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
 import torch
-
+import wandb
 
 class BBO:
     # apply configuration space params
-    def __init__(self, dataset, normalizer, save=True):
+    def __init__(self, job_name,dataset, normalizer, save=True):
         if not os.path.exists('results'):
             os.makedirs('results')
+        self.job_name = job_name
         self.dataset = dataset
         self.split = get_dataset_split(dataset, save)
         self.results = {}
@@ -27,11 +28,19 @@ class BBO:
     def run_ea(self, X, y, params) -> Member:
         model = TabPFNClassifier(device=self.device, N_ensemble_configurations=32)
         print('applying EA on {}'.format(self.dataset))
-        ea = EA(model=model, initial_X_train=X, y_train=y, **params)
+        ea = EA(self.job_name,self.dataset,model=model, initial_X_train=X, y_train=y, **params)
         res = ea.optimize()
         return res
 
     def evaluate_ea(self, optimum, save=True):
+        dataset_name = str(self.dataset)
+        # wandb.init(
+        #     project=f'Evaluation_{self.job_name}',
+        #     name=dataset_name,
+        #     notes=f'Evaluating Best Hyperparameter found for dataset {dataset_name}',
+        #     job_type='Evaluation',
+        #     tags=[dataset_name]
+        # )
         X_train, X_test, y_train, y_test = self.split
         classifier = TabPFNClassifier(device=self.device, N_ensemble_configurations=32)
 
@@ -63,6 +72,11 @@ class BBO:
         train_acc_after_ea,test_acc_after_ea = self.fit_run_model(classifier, new_x_train, y_train, new_x_test, y_test)
         self.results['train_acc_after'] = train_acc_after_ea
         self.results['test_acc_after'] = test_acc_after_ea
+        # wandb.log({'train_acc_before_ea':train_acc_before_ea,
+        #            'test_acc_before_ea':test_acc_before_ea,
+        #            'best_member_fitness':optimum.fitness,
+        #            'test_acc_after': test_acc_after_ea})
+        # wandb.finish()
         return self.results
 
     @staticmethod

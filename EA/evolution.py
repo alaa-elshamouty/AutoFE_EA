@@ -4,10 +4,12 @@ from typing import Callable, List, Tuple
 import random
 
 import numpy as np
+
 from EA.member_handling import Member
 from EA.strategies import Mutation, Recombination, ParentSelection
 
 from tqdm import tqdm
+import wandb
 
 
 class EA:
@@ -15,6 +17,8 @@ class EA:
 
     def __init__(
             self,
+            job_name,
+            dataset_name,
             model: Callable,
             initial_X_train: np.ndarray,
             y_train: np.ndarray,
@@ -70,7 +74,7 @@ class EA:
         assert 0 < children_per_step
         assert 0 < total_number_of_function_evaluations
         assert 0 < population_size
-
+        self.job_name = job_name
         # Step 1: initialize Population of size `population_size`
         # and then ensure it's sorted by it's fitness
         self.population = [
@@ -96,8 +100,25 @@ class EA:
         # will store the optimization trajectory and lets you easily observe how
         # often a new best member was generated
         self.trajectory = [self.population[0]]
-
         print(f"Average fitness of population: {self.get_average_fitness()}")
+        wandb.init(
+            project=f'EA_{str(dataset_name)}',
+            name=str(dataset_name),
+            notes=f'applying EA',
+            job_type=f'searching',
+            tags=[str(dataset_name)],
+            config={
+                'name': str(dataset_name),
+                'population_size': self.pop_size,
+                'selection_type': self.selection,
+                'max_func_evals': self.max_func_evals,
+                'children_per_step': self.num_children,
+                'fraction_mutation': self.frac_mutants,
+                'ns_every': self.max_pop_size,
+                'normalize': self.normalize,
+                'regularizer': self.regularizer
+            }
+        )
 
     def get_average_fitness(self) -> float:
         """The average fitness of the current population"""
@@ -204,8 +225,11 @@ class EA:
             Returns the best member of the population after optimization
         """
         pbar = tqdm(total=self.max_func_evals, position=0, leave=True)
-        pbar.set_description('EA')
+        pbar.set_description(f'EA{self.job_name}')
         step = 1
+        wandb.log({'average fitness': self.get_average_fitness(), 'best fitness': self.population[0],
+                   'pop_size': len(self.population),
+                   'dims_best_member': self.population[0].x_coordinate.shape[-1]})
         while self._func_evals < self.max_func_evals:
             before = self._func_evals
             avg_fitness = self.step()
@@ -220,9 +244,12 @@ class EA:
                 "----------------------------------",
             ]
             after = self._func_evals
+            wandb.log({'average fitness': avg_fitness, 'best fitness': best_fitness, 'pop_size': len(self.population),
+                       'dims_best_member': self.population[0].x_coordinate.shape[-1]})
             if step % 10 == 0:
                 print("\n".join(lines))
             step += 1
             pbar.update(after - before)
         pbar.close()
+        wandb.finish()
         return self.population[0]

@@ -11,11 +11,12 @@ from sklearn.preprocessing import StandardScaler, QuantileTransformer, Polynomia
 
 from utilities import check_all, get_opr_name
 
-
 class Combiner:
     one_time_oprs = ['RandomTreesEmbedding',
                      'RBFSampler',
-                     'QuantileTransformer']
+                     'QuantileTransformer',
+                     'StandardScaler'
+                     ]
     @staticmethod
     def get_random_mutation_opr(seen_oprs):
         single_ops = [(None, {}),
@@ -50,6 +51,7 @@ class Recombination(IntEnum):
     @staticmethod
     def apply_recombination(opr_info, x, col_id, partner_x, partner_col_id, lower=-np.inf, upper=np.inf, max_dims=100,applying_traj=False):
         new_x = x.copy()
+        new_x = check_all(new_x, lower, upper, max_dims=max_dims)
         if applying_traj:
             opr_class=opr_info
         else:
@@ -73,7 +75,7 @@ class Recombination(IntEnum):
                 opr = opr_class(**params)
                 new_x = opr.fit_transform(new_x)
 
-        new_x = check_all(new_x, lower, upper, max_dims=min(x.shape[-1] + 6, max_dims))
+        new_x = check_all(new_x, lower, upper, max_dims=max_dims)
         return opr, new_x
 
 
@@ -85,9 +87,10 @@ class Mutation(IntEnum):
     WEIGHTED = 1  # Gaussian mutation
 
     @staticmethod
-    def apply_mutation(opr_info, x, y=None, col_id=None, lower=-10, upper=10, max_dims=100,
+    def apply_mutation(opr_info, x, y=None, col_id=None, lower=-100, upper=100, max_dims=100,
                        applying_traj=False,):
         new_x = x.copy()
+        new_x = check_all(new_x,lower, upper, max_dims=max_dims)
         if applying_traj:
             opr_class = opr_info
         else:
@@ -102,15 +105,15 @@ class Mutation(IntEnum):
                 new_x = opr(new_x, col_id, axis=1)
             elif opr.__name__ == 'power':
                 new_x[:, col_id] = opr(col, 2).squeeze()
-            else:
+            else: #log
                 abs_col = np.abs(col)
-                new_x[:, col_id] = -1 * opr(np.where(abs_col == 0, 0.00001, abs_col).squeeze())
+                new_x[:, col_id] = np.sign(abs_col) * np.log(1 + np.abs(x)) #-1 * opr(np.where(abs_col == 0, 0.000001, abs_col).squeeze())
         else:
             if not applying_traj:
                 if 'decomposition' in opr_class.__module__:
-                    params['n_components'] = max(x.shape[-1] - 1, x.shape[-1] - 5)
+                    params['n_components'] = max(1, x.shape[-1] - 1)
                 elif 'agg' in opr_class.__module__:
-                    params['n_clusters'] = max(x.shape[-1] - 1, x.shape[-1] - 5)
+                    params['n_clusters'] = max(x.shape[-1] - 1, 1)
 
                 opr = opr_class(**params)
             else:
@@ -122,7 +125,7 @@ class Mutation(IntEnum):
                 if not isinstance(new_x, np.ndarray):
                     new_x = new_x.toarray()
 
-        new_x = check_all(new_x, lower, upper, min(x.shape[-1] + 6, max_dims))
+        new_x = check_all(new_x, lower, upper, max_dims)
         return opr, new_x
 
 
