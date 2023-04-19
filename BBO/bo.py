@@ -63,7 +63,7 @@ class BO(BBO):
         np.random.seed(0)  # fix seed for comparison
         normalize = config['normalize'] == 'True' if 'normalize' in config else True
         if normalize:
-            normalizer, X_train = normalize_data(self.dataset, X_train, normalizer =None, X_train=True, save=True)
+            normalizer, X_train = normalize_data(self.dataset, X_train, normalizer=None, X_train=True, save=True)
             self.normalizer = normalizer
         print('Setting up EA...')
         # setting EA parameters

@@ -3,10 +3,10 @@
 # Define the partition on which the job shall run.
 #SBATCH --partition mlhiwidlc_gpu-rtx2080    # short: -p <partition_name>
 
-#SBATCH --array=0-2
+#SBATCH --array=0-7
 
 # Define a name for your job
-#SBATCH --job-name AutoFE-%a             # short: -J <job name>
+#SBATCH --job-name AutoFE-bo-%a             # short: -J <job name>
 
 # Define the files to write the outputs of the job to.
 # Please note the SLURM will not create this directory for you, and if it is missing, no logs will be saved.
@@ -32,7 +32,7 @@ echo "Running job $SLURM_JOB_NAME using $SLURM_JOB_CPUS_PER_NODE cpus per node w
 # Running the job
 start=`date +%s`
 
-python main.py --dataset_id $SLURM_ARRAY_TASK_ID --runtime 7200
+python main.py --job_name start --dataset_id $SLURM_ARRAY_TASK_ID
 
 end=`date +%s`
 runtime=$((end-start))
