@@ -12,47 +12,47 @@ def load_openml_dataset(id):
     X, y, categorical_indicator, attribute_names = dataset.get_data(
         dataset_format="array", target=dataset.default_target_attribute
     )
-    return X,y, categorical_indicator,attribute_names
+    return X, y, categorical_indicator, attribute_names
 
-def load_dataset(dataset_fn=None,id=None):
+
+def load_dataset(dataset_fn=None, id=None):
     if dataset_fn:
         X, y = dataset_fn(return_X_y=True)
     else:
         if not id:
             raise ValueError('id of openml dataset not given')
-        X,y,_,_= load_openml_dataset(id)
-    return X,y
+        X, y, _, _ = load_openml_dataset(id)
+    return X, y
 
 
-def get_dataset_split(dataset,save=True):
-    if not os.path.exists(f"results/{str(dataset)}"):
-        os.mkdir(f"results/{str(dataset)}")
-    print('Loadind dataset:{}'.format(dataset))
+def get_dataset_split(dataset, dataset_name, save=True):
+    if not os.path.exists(f"results/{dataset_name}"):
+        os.mkdir(f"results/{dataset_name}")
+    print('Loadind dataset:{}'.format(dataset_name))
     if not isinstance(dataset, int):
         X, y = load_dataset(dataset_fn=dataset)
+        X = X.astype(float)
         if X.shape[0] > 10000:
             X = X[:10000, ]
-
     else:
         X, y = load_dataset(id=dataset)
-    X = check_all(X,lower=-10,upper=10,max_dims=100)
     print('Splitting Dataset...')
     split = train_test_split(X, y, test_size=0.33, random_state=42)
+
     if save:
-        np.save(f"results/{str(dataset)}/X_train", split[0])
-        np.save(f"results/{str(dataset)}/X_test", split[1])
-        np.save(f"results/{str(dataset)}/y_train", split[2])
-        np.save(f"results/{str(dataset)}/y_test", split[3])
+        np.save(f"results/{dataset_name}/X_train", split[0])
+        np.save(f"results/{dataset_name}/X_test", split[1])
+        np.save(f"results/{dataset_name}/y_train", split[2])
+        np.save(f"results/{dataset_name}/y_test", split[3])
 
     return split
 
-def normalize_data(dataset, data, normalizer =None, X_train=True, save=True):
-    data_copy = data.copy()
-    data_copy = check_all(data_copy, lower=-10, upper=10, max_dims=100)
-    if X_train:
-        normalizer = preprocessing.Normalizer()
-    name = 'normalized_X_train' if X_train else 'normalized_X_test'
-    normalized_data = normalizer.fit_transform(data_copy) if X_train else normalizer.transform(data_copy)
-    if save:
-        np.save(f"results/{str(dataset)}/{name}", normalized_data)
-    return normalizer,normalized_data
+
+def get_dataset_name(dataset_fn):
+    try:
+        name = dataset_fn.__name__
+    except:
+        dataset_name = str(dataset_fn)
+    else:
+        dataset_name = "_".join(name.split("_")[1:])
+    return dataset_name

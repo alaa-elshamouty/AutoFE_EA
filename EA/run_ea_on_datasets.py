@@ -13,7 +13,6 @@ from BBO import bo
 from BBO.bo import BO
 from EA.evolution import EA
 from EA.strategies import Mutation, Recombination, ParentSelection
-from utilities import apply_trajectory
 from data import global_datasets
 from data.datasets_handling import load_dataset, get_dataset_split
 import sys

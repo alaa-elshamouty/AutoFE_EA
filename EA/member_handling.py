@@ -5,25 +5,23 @@ import random
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
-
-from EA.strategies import Mutation, Recombination, Combiner
+from copy import deepcopy
+from EA.strategies import Mutation, Recombination, Combiner, apply_trajectory
 from utilities import get_opr_name, check_all
 
 
 class Member:
     """Class to simplify member handling."""
     last_id = 0
+    operations_used = []
 
     def __init__(
             self,
             initial_x: np.ndarray,
             y_train: np.ndarray,
-            model: Callable,
-            mutation: Mutation,
-            recombination: Recombination,
+            model,
             trajectory=(None, None, None, None, None),
-            fitness_trajectory: List = [],
-            seen_operators: set = set()
+            seen_operators=None
     ) -> None:
         """
         Parameters
@@ -31,7 +29,7 @@ class Member:
         initial_x : np.ndarray
             Initial coordinate of the member
 
-        model : Callable
+        device : Callable
             The target function that determines the fitness value
 
         mutation : Mutation
@@ -47,12 +45,11 @@ class Member:
             Optional hyperparameter that is only active if recombination is uniform
         """
         # astype is crucial here. Otherwise numpy might cast everything to int
-        self._x = initial_x.astype(float)
+        if seen_operators is None:
+            seen_operators = []
+        self._x = initial_x
         self._y_train = y_train
-        self._f_initial = model
         self._f = model
-        self._mutation = mutation
-        self._recombination = recombination
         self._max_dims = 100
 
         self._age = 0  # indicates how many offspring were generated from this member
@@ -62,8 +59,17 @@ class Member:
         self._fit_train = 0.0
         self._fit_test = 0.0
         self.traj = trajectory
-        self.fitness_traj = fitness_trajectory
+        if seen_operators is None:
+            seen_operators = []
         self.seen_oprs = seen_operators
+
+    def evaluate(self, X_test, y_test):
+        trajectory = self.traj
+        new_x_test = apply_trajectory(X_test, trajectory)
+        self._f.fit(self.x_coordinate, self._y_train, overwrite_warning=True)
+        pred_values = self._f.predict(new_x_test)
+        acc = accuracy_score(pred_values, y_test)
+        return acc
 
     @property
     def fitness(self) -> float:
@@ -82,7 +88,6 @@ class Member:
                 pred_values = self._f.predict(X_test)
                 acc = accuracy_score(pred_values, y_test)
                 acc_score.append(acc)
-                self._f = self._f_initial  # restart model to avoid fitting over a fitted model
 
             self._fit_test = np.average(acc_score)
 
@@ -96,14 +101,10 @@ class Member:
     @x_coordinate.setter
     def x_coordinate(self, value: np.ndarray) -> None:
         """Set the new x coordinate"""
-        if value.shape[-1] > self._max_dims:
-            print(f'Dimension exceeds max dimension, {value.shape[-1]},applying PCA')
-            pca = PCA('mle')
-            value = pca.fit_transform(value)
         self._x_changed = True
         self._x = value
 
-    def mutate(self) -> Member:
+    def mutate(self) -> Member | None:
         """Mutation which creates a new offspring
 
         As a side effect, it will increment the age of this Member.
@@ -114,39 +115,34 @@ class Member:
             The mutated Member created from this member
         """
         new_x = self.x_coordinate.copy()
-        new_x = check_all(new_x,lower=-10,upper=10,max_dims=100)
-        if self._mutation == Mutation.UNIFORM:
-            col_id = np.random.randint(new_x.shape[-1])
-            opr_info = Combiner.get_random_mutation_opr(self.seen_oprs)
-            opr_name = get_opr_name(opr_info[0])
+        col_id = np.random.randint(new_x.shape[-1])
+        opr_info = Combiner.get_random_mutation_opr(self.seen_oprs)
+        opr_name = get_opr_name(opr_info[0])
+        print(f'[OPR]: {opr_name}')
+        Member.operations_used.append(opr_name)
+        try:
             opr, new_x = Mutation.apply_mutation(opr_info, new_x, y=self._y_train, col_id=col_id)
-            trajectory = [(opr, self._id, col_id, None, None), self.traj, None]
-            self.fitness_traj.append((opr_name, self.fitness))
-            self.seen_oprs.add(opr_name)
-        elif self._mutation == Mutation.WEIGHTED:
-            raise NotImplementedError
-
-        elif self._mutation == Mutation.NONE:
-            pass
-
+        except Exception:
+            print('Failed to reproduce')
+            return None
         else:
-            # We won't consider any other mutation types
-            raise RuntimeError(f"Unknown mutation {self._mutation}")
+            trajectory = [(opr, self._id, col_id, None, None), self.traj, None]
+            seen_oprs = self.seen_oprs.copy()
+            seen_oprs.append(opr_name)
+            new_x, check_oprs = check_all(new_x)
+            trajectory = self.add_to_trajectory_check_oprs(check_oprs,
+                                                           trajectory)
+            child = Member(
+                new_x,
+                self._y_train,
+                self._f,
+                trajectory,
+                seen_oprs,
+            )
+            self._age += 1
+            return child
 
-        child = Member(
-            new_x,
-            self._y_train,
-            self._f,
-            self._mutation,
-            self._recombination,
-            trajectory,
-            self.fitness_traj,
-            self.seen_oprs,
-        )
-        self._age += 1
-        return child
-
-    def recombine(self, partner: Member) -> Member:
+    def recombine(self, partner: Member) -> Member | None:
         """Recombination of this member with a partner
 
         Parameters
@@ -159,44 +155,41 @@ class Member:
         Member
             A new Member based on the combination of this one and the partner
         """
-        # TODO
-        # ----------------
         new_x = self.x_coordinate.copy()
-        new_x = check_all(new_x,lower=-10,upper=10,max_dims=100)
-        if self._recombination == Recombination.WEIGHTED:
-            raise NotImplementedError
-        # ----------------
-
-        elif self._recombination == Recombination.UNIFORM:
-            opr_info = Combiner.get_random_crossover_opr()
-            opr_name = get_opr_name(opr_info)
-            col_id = np.random.randint(new_x.shape[-1])
-            partner_col_id = np.random.randint(partner.x_coordinate.shape[-1])
+        opr_info = Combiner.get_random_crossover_opr()
+        opr_name = get_opr_name(opr_info[0])
+        print(f'[OPR] {opr_name}')
+        Member.operations_used.append(opr_name)
+        col_id = np.random.randint(new_x.shape[-1])
+        partner_col_id = np.random.randint(partner.x_coordinate.shape[-1])
+        try:
             opr, new_x = Recombination.apply_recombination(opr_info, new_x, col_id, partner.x_coordinate,
                                                            partner_col_id)
-            trajectory = [(opr, self._id, col_id, partner._id, partner_col_id), self.traj, partner.traj]
-            self.fitness_traj.append((opr_name, self.fitness))
-            self.seen_oprs.add(opr_name)
-        elif self._recombination == Recombination.NONE:
-            # copy is important here to not only get a reference
-            new_x = self.x_coordinate.copy()
-
+        except Exception:
+            print('Failed to reproduce')
+            return None
         else:
-            raise NotImplementedError
+            trajectory = [(opr, self._id, col_id, partner._id, partner_col_id), self.traj, partner.traj]
+            seen_oprs = self.seen_oprs.copy()
+            seen_oprs.append(opr_name)
+            new_x, check_oprs = check_all(new_x)
+            trajectory = self.add_to_trajectory_check_oprs(check_oprs,
+                                                           trajectory)
+            child = Member(
+                new_x,
+                self._y_train,
+                self._f,
+                trajectory,
+                seen_oprs
+            )
+            self._age += 1
+            return child
 
-        # print(f"new point after recombination:\n {new_x.shape}")
-
-        child = Member(
-            new_x,
-            self._y_train,
-            self._f,
-            self._mutation,
-            self._recombination,
-            trajectory,
-            self.fitness_traj
-        )
-        self._age += 1
-        return child
+    def add_to_trajectory_check_oprs(self, oprs, trajectory):
+        for opr in oprs:
+            if opr is not None:
+                trajectory = [(opr, self._id, None, None, None), trajectory, None]
+        return trajectory
 
     def __str__(self) -> str:
         """Makes the class easily printable"""

@@ -16,12 +16,11 @@ from smac.intensification.successive_halving import SuccessiveHalving
 from smac.scenario.scenario import Scenario
 from smac.utils.io.output_writer import OutputWriter
 # from smac.utils.io.result_merging import ResultMerger
-from data.datasets_handling import normalize_data
 
 
 class BO(BBO):
-    def __init__(self, job_name,dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo', normalizer=None):
-        super().__init__(job_name,dataset, normalizer)
+    def __init__(self,dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo'):
+        super().__init__(dataset)
         self.cs = ConfigurationSpace()
         self.params = []
         self.smac_type = smac_type
@@ -37,18 +36,17 @@ class BO(BBO):
         # Build Configuration Space which defines all parameters and their ranges.
         # To illustrate different parameter types,
         # we use continuous, integer and categorical parameters.
-        normalize_before_ea = CS.CategoricalHyperparameter('normalize', choices=['True', 'False'], default_value='True')
-        max_func_evals = CS.CategoricalHyperparameter('total_number_of_function_evaluations', choices=[100,500,1000,10000], default_value=500)
-        pop_size = CS.CategoricalHyperparameter('population_size', choices=[1,3,10,100], default_value=3)
+        max_func_evals = CS.CategoricalHyperparameter('total_number_of_function_evaluations', choices=[100,500,1000,2000], default_value=100)
+        pop_size = CS.CategoricalHyperparameter('population_size', choices=[3,10,50], default_value=3)
         fraction_mutation = CS.UniformFloatHyperparameter('fraction_mutation', lower=0., upper=1., default_value=0.5)
-        children_per_step = CS.CategoricalHyperparameter('children_per_step', choices=[1, 3, 10, 100], default_value=1)
-        max_pop_size = CS.CategoricalHyperparameter('max_pop_size', choices=[0, 10, 100], default_value=0)
+        children_per_step = CS.CategoricalHyperparameter('children_per_step', choices=[1, 3, 10], default_value=1)
+        max_pop_size = CS.CategoricalHyperparameter('max_pop_size', choices=[0, 10, 50, 100], default_value=0)
         parent_selection = CS.CategoricalHyperparameter('selection_type',
                                                         choices=[0, 1, 2],
                                                         default_value=0)
         regularizer = CS.UniformFloatHyperparameter("regularizer", 0,1 , default_value=0.25)
 
-        self.params = [normalize_before_ea, max_func_evals, pop_size, fraction_mutation, children_per_step,
+        self.params = [max_func_evals, pop_size, fraction_mutation, children_per_step,
                        max_pop_size, parent_selection, regularizer]
 
         self.cs.add_hyperparameters(self.params)
@@ -59,29 +57,16 @@ class BO(BBO):
 
     def _determine_best_hypers(self, config):
         #wandb.config = config
-        X_train, _, y_train, _ = self.split
+        X_train, X_test, y_train, y_test = self.split
         np.random.seed(0)  # fix seed for comparison
-        normalize = config['normalize'] == 'True' if 'normalize' in config else True
-        if normalize:
-            normalizer, X_train = normalize_data(self.dataset, X_train, normalizer=None, X_train=True, save=True)
-            self.normalizer = normalizer
         print('Setting up EA...')
         # setting EA parameters
         self.results['EA_params'] = config
 
-        optimum = self.run_ea(X=X_train, y=y_train, params=config)
-        #wandb.log({'bo_score': 1 - optimum.fitness})
+        optimum = self.run_ea(job_name='searching_config',X=X_train, y=y_train, X_test=X_test, y_test=y_test,params=config)
         return 1 - optimum.fitness
 
     def run_bo(self):
-        dataset_name = str(self.dataset)
-        # wandb.init(
-        #     project=f'BO{self.job_name}',
-        #     name=dataset_name,
-        #     notes=f'Determinig best hyperparameters, BO',
-        #     job_type='BO',
-        #     tags=[dataset_name]
-        # )
         working_dir = os.path.join(self.working_dir, str(self.dataset))
         if not os.path.exists(working_dir):
             os.mkdir(working_dir)
@@ -97,13 +82,13 @@ class BO(BBO):
                 # Alternatively, you can also disable this.
                 # Then you should handle runtime and memory yourself in the TA
                 "limit_resources": False,
-                "cutoff": 1000,  # runtime limit for target algorithm
+                "cutoff": 3*60*60,  # runtime limit for target algorithm
                 "memory_limit": 8119,
-                'verbose': 'DEBUG',  # adapt this to reasonable value for your hardware
+                "abort_on_first_run_crash": False
             }
         )
         # max budget for hyperband
-        max_epochs = 100
+        max_epochs = 1000
         # intensifier parameters (Budget parameters for BOHB)
         intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_epochs, 'eta': 3}
 

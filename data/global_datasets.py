@@ -1,4 +1,7 @@
-from sklearn.datasets import load_iris, load_digits, load_wine
+import pandas as pd
+from sklearn.datasets import load_iris, load_digits, load_wine, load_breast_cancer
+
+from data.datasets_handling import load_dataset
 
 open_cc_dids = {
     15: 'breast-w',  # crashes,
@@ -37,4 +40,7 @@ open_ml_name_dict = {
 open_ml_ids = list(open_ml_name_dict.keys())
 open_cc_ids = list(open_cc_dids.keys())
 sklearn_dataloaders = [load_iris, load_digits, load_wine]
-datasets = sklearn_dataloaders + open_ml_ids + open_cc_ids
+#datasets = open_ml_ids + open_cc_ids + sklearn_dataloaders
+datasets = [458,15,1068,11,22,16,1510,18,31,469,188,37,54,14,23,50]
+#datasets = [15,37,23] #23
+#datasets = [16]

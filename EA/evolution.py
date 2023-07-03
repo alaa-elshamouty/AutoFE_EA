@@ -2,14 +2,19 @@ from __future__ import annotations
 
 from typing import Callable, List, Tuple
 import random
-
+from copy import deepcopy
 import numpy as np
 
 from EA.member_handling import Member
-from EA.strategies import Mutation, Recombination, ParentSelection
+from EA.strategies import Mutation, Recombination, ParentSelection, add_to_trajectory_check_oprs
 
 from tqdm import tqdm
 import wandb
+from collections import Counter
+
+from utilities import check_all
+
+from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
 
 
 class EA:
@@ -19,25 +24,24 @@ class EA:
             self,
             job_name,
             dataset_name,
-            model: Callable,
+            device: str,
             initial_X_train: np.ndarray,
             y_train: np.ndarray,
+            X_test: np.ndarray,
+            y_test: np.ndarray,
             population_size: int = 10,
-            mutation_type: Mutation = Mutation.UNIFORM,
-            recombination_type: Recombination = Recombination.UNIFORM,
             selection_type: ParentSelection = ParentSelection.NEUTRAL,
             total_number_of_function_evaluations: int = 200,
             children_per_step: int = 3,
             fraction_mutation: float = 0.5,
             max_pop_size: int = 20,
-            normalize: bool = True,
             regularizer: float = 0.75,
 
     ):
         """
         Parameters
         ----------
-        model : Callable
+        device : Callable
             callable target function we optimize
 
         population_size: int = 10
@@ -74,16 +78,16 @@ class EA:
         assert 0 < children_per_step
         assert 0 < total_number_of_function_evaluations
         assert 0 < population_size
-        self.job_name = job_name
         # Step 1: initialize Population of size `population_size`
         # and then ensure it's sorted by it's fitness
+        self.X_test = X_test
+        self.y_test = y_test
+        self.job_name = job_name
         self.population = [
             Member(
                 initial_X_train,
                 y_train,
-                model,
-                mutation_type,
-                recombination_type,
+                TabPFNClassifier(device=device, N_ensemble_configurations=32),
             )
             for _ in range(population_size)
         ]
@@ -95,27 +99,25 @@ class EA:
         self.frac_mutants = fraction_mutation
         self._func_evals = population_size
         self.max_pop_size = max_pop_size
-        self.normalize = normalize
         self.regularizer = regularizer
         # will store the optimization trajectory and lets you easily observe how
         # often a new best member was generated
         self.trajectory = [self.population[0]]
         print(f"Average fitness of population: {self.get_average_fitness()}")
         wandb.init(
-            project=f'EA_{str(dataset_name)}',
-            name=str(dataset_name),
-            notes=f'applying EA',
-            job_type=f'searching',
-            tags=[str(dataset_name)],
+            project=f'EA_with_opt_cfg_Final',
+            name=dataset_name,
+            notes=f'applying EA with optimal configuration found on datasets, final run',
+            job_type=self.job_name,
+            tags=[dataset_name],
             config={
-                'name': str(dataset_name),
+                'name': dataset_name,
                 'population_size': self.pop_size,
                 'selection_type': self.selection,
                 'max_func_evals': self.max_func_evals,
                 'children_per_step': self.num_children,
                 'fraction_mutation': self.frac_mutants,
                 'ns_every': self.max_pop_size,
-                'normalize': self.normalize,
                 'regularizer': self.regularizer
             }
         )
@@ -153,7 +155,7 @@ class EA:
         else:
             raise NotImplementedError
 
-        print(f"Selected parents IDS: {[parent._id for parent in parents]}")
+        # print(f"Selected parents IDS: {[parent._id for parent in parents]}")
         return parents
 
     def step(self) -> float:
@@ -176,15 +178,18 @@ class EA:
         for parent in parents:
             if random.random() < self.frac_mutants:
                 # mutation
-                children.append(parent.mutate())
+                child = parent.mutate()
             else:
                 # recombination
                 other_parent = random.choice(parents)
-                children.append(parent.recombine(other_parent))
-            self._func_evals += 1
+                child = parent.recombine(other_parent)
+
+            if child is not None:
+                children.append(child)
+        self._func_evals += 1
         # -----------------------
 
-        print(f"Children: {len(children)}")
+        # print(f"Children: {len(children)}")
 
         # Step 4: Survival selection
         # (mu + lambda)-selection i.e. combine offspring and parents in one sorted list,
@@ -195,22 +200,13 @@ class EA:
         self.population.sort(key=lambda x: x.fitness, reverse=True)
 
         # if len(self.population) > self.max_pop_size:
-        if (self.max_pop_size > 0) and (len(self.population) % self.max_pop_size == 0):
+        if (self.max_pop_size > 0) and (len(self.population) > self.max_pop_size):
             print('Regularizing :: population number: {}, percentage remove: {}'.format(len(self.population),
                                                                                         self.regularizer))
             keep = int((1 - self.regularizer) * len(self.population))
-            # Resort the population based on age
-            # self.population.sort(key=lambda x: x._age,reverse=True)
-            # Reduce the population
-            # self.population = self.population[:2] + self.population[3+self.regularizer:]
-            # self.population = self.population[:-self.regularizer]
             self.population = self.population[:keep]
-            # self.population = self.population[:-int(len(self.population)/4)]
-            # self.population = self.population[:5]
-            # Resort the population based on Fitness again
-            # self.population.sort(key=lambda x: x.fitness, reverse=True)
 
-        print('Normal :: population number: {}, percentage remove: {}'.format(len(self.population), self.regularizer))
+        print('Normal :: population number: {}'.format(len(self.population)))
         # Append the best Member to the trajectory
         self.trajectory.append(self.population[0])
 
@@ -227,13 +223,34 @@ class EA:
         pbar = tqdm(total=self.max_func_evals, position=0, leave=True)
         pbar.set_description(f'EA{self.job_name}')
         step = 1
-        wandb.log({'average fitness': self.get_average_fitness(), 'best fitness': self.population[0],
+        best_x_before = self.population[0].x_coordinate
+        best_fitness_before = self.population[0].fitness
+        test_score_before = self.population[0].evaluate(self.X_test, self.y_test)
+        wandb.config['first_best_fitness'] = best_fitness_before
+        wandb.config['first_test_score']= test_score_before
+        wandb.log({'average fitness': self.get_average_fitness(), 'best fitness': best_fitness_before,
                    'pop_size': len(self.population),
-                   'dims_best_member': self.population[0].x_coordinate.shape[-1]})
+                   'dims_best_member': self.population[0].x_coordinate.shape[-1],
+                   'test_score': test_score_before})
         while self._func_evals < self.max_func_evals:
-            before = self._func_evals
             avg_fitness = self.step()
-            best_fitness = self.population[0].fitness
+            best_x_now = self.population[0].x_coordinate
+            if best_x_before.shape == best_x_now.shape:
+                if np.all(np.equal(best_x_before, best_x_now)):
+                    best_member_test = test_score_before
+                    best_fitness = best_fitness_before
+                else:
+                    best_fitness = self.population[0].fitness
+                    best_fitness_before = best_fitness
+                    best_member_test = self.population[0].evaluate(self.X_test, self.y_test)
+                    test_score_before = best_member_test
+                    best_x_before = best_x_now
+            else:
+                best_fitness = self.population[0].fitness
+                best_fitness_before = best_fitness
+                best_member_test = self.population[0].evaluate(self.X_test, self.y_test)
+                test_score_before = best_member_test
+                best_x_before = best_x_now
             lines = [
                 "=========",
                 f"Step: {step}",
@@ -243,13 +260,16 @@ class EA:
                 f"Func evals: {self._func_evals}",
                 "----------------------------------",
             ]
-            after = self._func_evals
             wandb.log({'average fitness': avg_fitness, 'best fitness': best_fitness, 'pop_size': len(self.population),
-                       'dims_best_member': self.population[0].x_coordinate.shape[-1]})
-            if step % 10 == 0:
+                       'dims_best_member': self.population[0].x_coordinate.shape[-1], 'test_score': best_member_test})
+            if step % 20 == 0:
                 print("\n".join(lines))
             step += 1
-            pbar.update(after - before)
+            pbar.update(1)
+        operations_counter = Counter(self.population[0].seen_oprs)
+        wandb.config['operations'] = dict(operations_counter)
+        wandb.config['final_test_score'] = test_score_before
+        wandb.config['final_best_fitness'] = best_fitness_before
         pbar.close()
         wandb.finish()
         return self.population[0]
