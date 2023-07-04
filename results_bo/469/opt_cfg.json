@@ -1,0 +1,1 @@
+{"children_per_step": 10, "fraction_mutation": 0.9717118675840031, "max_pop_size": 10, "population_size": 10, "regularizer": 0.1751894643994163, "selection_type": 2, "total_number_of_function_evaluations": 2000}
