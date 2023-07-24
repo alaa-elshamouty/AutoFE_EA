@@ -1,3 +1,13 @@
 /data/.kaggle/
 .idea/*.xml
 .idea/*.iml
+/Evaluation/dist/
+/Evaluation/old/
+/Evaluation/plots_ea_only/
+/Evaluation/wandb/
+/Evaluation/wandb_data/
+/Evaluation/results/
+/results/
+/results_bo/
+/tests/
+/wandb/
