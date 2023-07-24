@@ -1,22 +1,15 @@
-import pickle
-
-import torch.cuda
-from sklearn.datasets import load_breast_cancer, load_iris
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
-from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
-from sklearn import preprocessing
-import numpy as np
-
 import json
-from BBO import bo
-from BBO.bo import BO
-from EA.evolution import EA
-from EA.strategies import Mutation, Recombination, ParentSelection
-from data import global_datasets
-from data.datasets_handling import load_dataset, get_dataset_split
-import sys
 import os
+import pickle
+import sys
+
+import numpy as np
+import torch.cuda
+from sklearn.datasets import load_iris
+from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
+
+from BBO.bo import BO
+from data.datasets_handling import get_dataset_split
 
 sys.stdout = open('output_log.txt', 'w')
 if not os.path.exists('results/'):
@@ -24,10 +17,8 @@ if not os.path.exists('results/'):
 results_all = {}
 
 if __name__ == "__main__":
-    """Simple main to give an example of how to use the EA"""
-    # N_ensemble_configurations controls the number of model predictions that are ensembled with feature and class rotations (See our work for details).
-    # When N_ensemble_configurations > #features * #classes, no further averaging is applied.
-    device = 'cuda' if torch.cuda.is_available() else 'cpu' 
+    """Simple main to give an example of how to use the EA given a best found set of hyperparameters for EA"""
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     classifier = TabPFNClassifier(device=device, N_ensemble_configurations=32)
     np.random.seed(0)  # fix seed for comparison
     dataset_folder = '11'
@@ -46,4 +37,3 @@ if __name__ == "__main__":
         os.mkdir(working_dir)
     with open(f'{working_dir}/{str(dataset)}_results.pkl', 'wb') as f:
         pickle.dump(results, f)
-

@@ -1,12 +1,11 @@
+import argparse
+import json
 import os
 import pickle
 
 from BBO.bo import BO
-from EA.strategies import Mutation, Recombination, ParentSelection
+from EA.strategies import ParentSelection
 from data import global_datasets
-import json
-import argparse
-
 from data.datasets_handling import get_dataset_name
 
 parser = argparse.ArgumentParser(description='AutoFE')
@@ -19,17 +18,9 @@ args = parser.parse_args()
 
 
 def main_ea(args):
-    dataset = 469 #global_datasets.datasets[args.dataset_id]
-    runtime = args.runtime
-    bo = BO(dataset=dataset)
     # Run EA with self defined hyperparameters
-    params = {'population_size': 5,
-              'selection_type': ParentSelection.TOURNAMENT,
-              'total_number_of_function_evaluations': runtime,
-              'children_per_step': 3,
-              'fraction_mutation': 0.5,
-              'max_pop_size': 100,
-              'regularizer': 0.5}
+    dataset = global_datasets.datasets[args.dataset_id]
+    bo = BO(dataset=dataset)
     params = {'population_size': 1,
               'selection_type': ParentSelection.TOURNAMENT,
               'total_number_of_function_evaluations': 200,
@@ -38,10 +29,10 @@ def main_ea(args):
               'max_pop_size': 1,
               'regularizer': 0.5}
     X_train, X_test, y_train, y_test = bo.split
-    optimum = bo.run_ea(job_name='ea_only_weight_oprs', X=X_train, y=y_train, X_test=X_test, y_test=y_test, params=params)
+    optimum = bo.run_ea(job_name='ea_only_weight_oprs', X=X_train, y=y_train, X_test=X_test, y_test=y_test,
+                        params=params)
 
     # Evaluate on X_test
-    exit()
     results = bo.evaluate_ea(optimum)
     working_dir = 'results_ea_' + str(args.job_name)
     if not os.path.exists(working_dir):
@@ -54,6 +45,7 @@ def main_ea(args):
 
 
 def main_evaluate(args):
+    # Run EA with best found hyperparameters
     directory = 'results_bo'
     dataset_fn = global_datasets.datasets[args.dataset_id]
     dataset_name = get_dataset_name(dataset_fn)
@@ -77,6 +69,7 @@ def main_evaluate(args):
 
 
 def main(args):
+    # Run BO to find the best hyperparameters then run EA with best hyperparameters
     dataset = global_datasets.datasets[args.dataset_id]
     smac_type = 'BOHB'
     runtime = args.runtime
@@ -85,11 +78,7 @@ def main(args):
     X_train, X_test, y_train, y_test = bo.split
     # get the best hyperparameters for EA
     incumbent = bo.run_bo()
-    # Run EA with best hyperparameters
     optimum = bo.run_ea(job_name='optimal_config', X=X_train, y=y_train, params=incumbent)
-
-
-
 
 
 if __name__ == "__main__":

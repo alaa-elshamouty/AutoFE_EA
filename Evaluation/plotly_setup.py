@@ -1,5 +1,3 @@
-from plotly.graph_objs import Box, Figure, Scatter
-from plotly.subplots import make_subplots
 import plotly.express as px
 
 title_text = ''

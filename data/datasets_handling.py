@@ -1,17 +1,14 @@
 import os
+
 import numpy as np
 import openml as openml
-from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-
-from utilities import check_all
 
 
 def load_openml_dataset(id):
     dataset = openml.datasets.get_dataset(id)
     X, y, categorical_indicator, attribute_names = dataset.get_data(
-        dataset_format="array", target=dataset.default_target_attribute
-    )
+        dataset_format="array", target=dataset.default_target_attribute)
     return X, y, categorical_indicator, attribute_names
 
 
@@ -28,11 +25,11 @@ def load_dataset(dataset_fn=None, id=None):
 def get_dataset_split(dataset, dataset_name, save=True):
     if not os.path.exists(f"results/{dataset_name}"):
         os.mkdir(f"results/{dataset_name}")
-    print('Loadind dataset:{}'.format(dataset_name))
+    print('Loading dataset:{}'.format(dataset_name))
     if not isinstance(dataset, int):
         X, y = load_dataset(dataset_fn=dataset)
         X = X.astype(float)
-        if X.shape[0] > 10000:
+        if X.shape[0] > 10000:  # TabPFN max number of samples 10000
             X = X[:10000, ]
     else:
         X, y = load_dataset(id=dataset)

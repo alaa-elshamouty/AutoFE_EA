@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/mnt/c/Program Files/JetBrains/PyCharm 2022.3.2/plugins/python/helpers/pydev/pydevd.py", line 1496, in _exec
+    pydev_imports.execfile(file, globals, locals)  # execute the script
+  File "/mnt/c/Program Files/JetBrains/PyCharm 2022.3.2/plugins/python/helpers/pydev/_pydev_imps/_pydev_execfile.py", line 18, in execfile
+    exec(compile(contents+"\n", file, 'exec'), glob, loc)
+  File "/mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/evaluation_trajectory.py", line 97, in <module>
+    new_x_train, new_x_test = apply_trajectory_simultaneuosly(X_train, X_test, trajectory,opr_names,test_scores)
+  File "/mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/evaluation_trajectory.py", line 63, in apply_trajectory_simultaneuosly
+    first_member_data_train, first_member_data_test,opr_names,test_scores = apply_trajectory_simultaneuosly(dataset_train, dataset_test, traj_first_member,opr_names,test_scores)
+  File "/mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/evaluation_trajectory.py", line 63, in apply_trajectory_simultaneuosly
+    first_member_data_train, first_member_data_test,opr_names,test_scores = apply_trajectory_simultaneuosly(dataset_train, dataset_test, traj_first_member,opr_names,test_scores)
+  File "/mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/evaluation_trajectory.py", line 63, in apply_trajectory_simultaneuosly
+    first_member_data_train, first_member_data_test,opr_names,test_scores = apply_trajectory_simultaneuosly(dataset_train, dataset_test, traj_first_member,opr_names,test_scores)
+  [Previous line repeated 18 more times]
+  File "/mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/evaluation_trajectory.py", line 65, in apply_trajectory_simultaneuosly
+    second_member_data_train, second_member_data_test,opr_names,test_scores = apply_trajectory_simultaneuosly(dataset_train, dataset_test,traj_second_member,opr_names,test_scores)
+ValueError: not enough values to unpack (expected 4, got 2)

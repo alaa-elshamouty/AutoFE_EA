@@ -1,0 +1,145 @@
+{
+    "os": "Linux-5.15.90.1-microsoft-standard-WSL2-x86_64-with-glibc2.17",
+    "python": "3.8.16",
+    "heartbeatAt": "2023-05-01T11:10:29.718658",
+    "startedAt": "2023-05-01T11:10:27.707514",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/evaluation_trajectory.py",
+    "codePath": "Evaluation/evaluation_trajectory.py",
+    "git": {
+        "remote": "https://github.com/alaa-elshamouty/AutoFE_EA.git",
+        "commit": "88879a288ee0d4efd6ec44069f4317af8d94edfa"
+    },
+    "email": null,
+    "root": "/mnt/c/Users/Alaa/git/AutoFE_EA",
+    "host": "DESKTOP-KN8ON79",
+    "username": "ae",
+    "executable": "/home/ae/anaconda3/envs/AutoFE3/bin/python",
+    "cpu_count": 10,
+    "cpu_count_logical": 20,
+    "cpu_freq": {
+        "current": 2687.998,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2687.998,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "total": 1006.853931427002,
+        "used": 29.98705291748047
+    },
+    "gpu": "NVIDIA GeForce RTX 3070 Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+            "memory_total": 8589934592
+        }
+    ],
+    "memory": {
+        "total": 7.623359680175781
+    }
+}

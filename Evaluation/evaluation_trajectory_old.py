@@ -242,7 +242,7 @@ def get_opr_count():
         'inc':oprs_inc_count,
         'dec':oprs_dec_count,
     }
-    with open('opr_counts.pickle', 'wb') as handle:
+    with open('plots_html/opr_counts.pickle', 'wb') as handle:
         pickle.dump(final_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
@@ -254,7 +254,7 @@ def update_dict_count(opr, oprs_count):
 
 
 def plot_operations_used():
-    with open('opr_counts.pickle', 'rb') as handle:
+    with open('plots_html/opr_counts.pickle', 'rb') as handle:
          oprs_count= pickle.load(handle)
     fig = go.Figure()
     total = oprs_count['total']

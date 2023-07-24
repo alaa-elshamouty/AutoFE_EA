@@ -1,0 +1,19 @@
+2023-05-01 13:08:30,684 INFO    StreamThr :19509 [internal.py:wandb_internal():87] W&B internal server running at pid: 19509, started at: 2023-05-01 13:08:30.681562
+2023-05-01 13:08:30,688 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status
+2023-05-01 13:08:31,003 INFO    WriterThread:19509 [datastore.py:open_for_write():85] open: /mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/wandb/run-20230501_130830-e4chzthw/run-e4chzthw.wandb
+2023-05-01 13:08:31,009 DEBUG   SenderThread:19509 [sender.py:send():336] send: header
+2023-05-01 13:08:36,012 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:08:41,013 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:08:46,014 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:08:51,016 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:08:56,018 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:01,019 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:06,021 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:11,022 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:16,023 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:21,024 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:26,025 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: status_report
+2023-05-01 13:09:28,636 DEBUG   HandlerThread:19509 [handler.py:handle_request():144] handle_request: shutdown
+2023-05-01 13:09:28,637 INFO    HandlerThread:19509 [handler.py:finish():842] shutting down handler
+2023-05-01 13:09:29,026 INFO    SenderThread:19509 [sender.py:finish():1504] shutting down sender
+2023-05-01 13:09:29,027 INFO    WriterThread:19509 [datastore.py:close():298] close: /mnt/c/Users/Alaa/git/AutoFE_EA/Evaluation/wandb/run-20230501_130830-e4chzthw/run-e4chzthw.wandb

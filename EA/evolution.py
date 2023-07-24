@@ -1,20 +1,16 @@
 from __future__ import annotations
 
-from typing import Callable, List, Tuple
 import random
-from copy import deepcopy
+from collections import Counter
+from typing import List
+
 import numpy as np
+import wandb
+from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
+from tqdm import tqdm
 
 from EA.member_handling import Member
-from EA.strategies import Mutation, Recombination, ParentSelection, add_to_trajectory_check_oprs
-
-from tqdm import tqdm
-import wandb
-from collections import Counter
-
-from utilities import check_all
-
-from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
+from EA.strategies import ParentSelection
 
 
 class EA:
@@ -41,45 +37,53 @@ class EA:
         """
         Parameters
         ----------
-        device : Callable
-            callable target function we optimize
+        job_name : job id for running on cluster
+
+        dataset_name : name of datasets for wandb parameter
+
+        device : str
+            cuda or cpu for torch
+
+        initial_X_train: initial training dataset
+
+        y_train: target values for initial_X_train
+
+        X_test: test dataset
+
+        y_test: target values for X_test
+
 
         population_size: int = 10
             The total population size to use
 
 
-        mutation_type: Mutation = Mutation.UNIFORM
-            Hyperparameter to set mutation strategy
-
-        recombination_type: Recombination = Recombination.INTERMEDIATE
-            Hyperparameter to set recombination strategy
-
         selection_type: ParentSelection = ParentSelection.NEUTRAL
             Hyperparameter to set selection strategy
 
 
-        recom_proba: float = 0.5
-            Conditional hyperparameter dependent on recombination_type UNIFORM.
-
         total_number_of_function_evaluations: int = 200
             Maximum allowed function evaluations
 
-        children_per_step: int = 5
+        children_per_step: int = 3
             How many children to produce per step
 
         fraction_mutation: float = 0.5
-            Balance between sexual and asexual reproduction
+            Balance between mutation and recombination
 
         max_pop_size: int = 20
-            Maximum number of population. If exceeded we kill the oldest members to reduce it to population_size
+            Maximum number of population. If exceeded we kill the least fit members to reduce it to population_size
+
+        regularizer: float = 0.75
+            percentage of the population to remove when max_pop_size exceeded
 
         """
         assert 0 <= fraction_mutation <= 1
         assert 0 < children_per_step
         assert 0 < total_number_of_function_evaluations
         assert 0 < population_size
+
         # Step 1: initialize Population of size `population_size`
-        # and then ensure it's sorted by it's fitness
+        # and then ensure it's sorted by its fitness
         self.X_test = X_test
         self.y_test = y_test
         self.job_name = job_name
@@ -155,7 +159,6 @@ class EA:
         else:
             raise NotImplementedError
 
-        # print(f"Selected parents IDS: {[parent._id for parent in parents]}")
         return parents
 
     def step(self) -> float:
@@ -191,15 +194,12 @@ class EA:
 
         # print(f"Children: {len(children)}")
 
-        # Step 4: Survival selection
-        # (mu + lambda)-selection i.e. combine offspring and parents in one sorted list,
-        # keeping the pop_size best of the population
+        # Step 4: Survival selection , remove the least fit members
         self.population.extend(children)
 
         # Resort the population based on Fitness
         self.population.sort(key=lambda x: x.fitness, reverse=True)
 
-        # if len(self.population) > self.max_pop_size:
         if (self.max_pop_size > 0) and (len(self.population) > self.max_pop_size):
             print('Regularizing :: population number: {}, percentage remove: {}'.format(len(self.population),
                                                                                         self.regularizer))
@@ -227,7 +227,7 @@ class EA:
         best_fitness_before = self.population[0].fitness
         test_score_before = self.population[0].evaluate(self.X_test, self.y_test)
         wandb.config['first_best_fitness'] = best_fitness_before
-        wandb.config['first_test_score']= test_score_before
+        wandb.config['first_test_score'] = test_score_before
         wandb.log({'average fitness': self.get_average_fitness(), 'best fitness': best_fitness_before,
                    'pop_size': len(self.population),
                    'dims_best_member': self.population[0].x_coordinate.shape[-1],

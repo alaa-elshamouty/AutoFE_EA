@@ -1,11 +1,9 @@
 from __future__ import annotations
-from sklearn.decomposition import PCA
-from typing import Callable, Optional, Tuple, List
-import random
+
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
-from copy import deepcopy
+
 from EA.strategies import Mutation, Recombination, Combiner, apply_trajectory
 from utilities import get_opr_name, check_all
 
@@ -27,22 +25,19 @@ class Member:
         Parameters
         ----------
         initial_x : np.ndarray
-            Initial coordinate of the member
+            Initial dataset of the member
 
-        device : Callable
-            The target function that determines the fitness value
+        y_train : np.ndarray
+            target values of initial_x
 
-        mutation : Mutation
-            Hyperparameter that determines which mutation type use
+        model :
+            model to fit and classify the dataset
 
-        recombination : Recombination
-            Hyperparameter that determines which recombination type to use
+        trajectory : tuple
+            trajectory of the member
 
-        sigma : Optional[float] = None
-            Optional hyperparameter that is only active if mutation is gaussian
-
-        recom_prob : Optional[float]
-            Optional hyperparameter that is only active if recombination is uniform
+        seen_operators : None
+            operators used in the trajectory of the member
         """
         # astype is crucial here. Otherwise numpy might cast everything to int
         if seen_operators is None:
@@ -129,7 +124,7 @@ class Member:
             trajectory = [(opr, self._id, col_id, None, None), self.traj, None]
             seen_oprs = self.seen_oprs.copy()
             seen_oprs.append(opr_name)
-            new_x, check_oprs = check_all(new_x)
+            new_x, check_oprs = check_all(new_x)  # check the validity of the modified dataset
             trajectory = self.add_to_trajectory_check_oprs(check_oprs,
                                                            trajectory)
             child = Member(

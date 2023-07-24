@@ -1,9 +1,10 @@
 import random
 from collections import Counter
 from enum import IntEnum
+
 import numpy as np
 from sklearn.cluster import FeatureAgglomeration
-from sklearn.decomposition import PCA, FastICA, KernelPCA, TruncatedSVD
+from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomTreesEmbedding
 from sklearn.feature_selection import SelectPercentile
 from sklearn.impute import SimpleImputer
@@ -18,7 +19,7 @@ class Combiner:
                      'RBFSampler',
                      'QuantileTransformer',
                      'StandardScaler'
-                     ]
+                     ]  # operations that must be used only once in a trajectory
     single_ops = [(None, {}),
                   (StandardScaler, {}),
                   (SimpleImputer, {'strategy': 'mean', 'copy': False}),
@@ -33,7 +34,7 @@ class Combiner:
                   (np.log, {}), (np.square, {}), (np.power, {}), (np.sqrt, {}), (np.abs, {}),
                   # (np.delete, {}),
                   (np.exp, {}), (np.sin, {}), (np.cos, {}), (np.reciprocal, {}),
-                  (PCA, {'n_components': 0.8, 'svd_solver': 'full'})]
+                  (PCA, {'n_components': 0.8, 'svd_solver': 'full'})]  # mutation opetraions
     single_ops_name = [get_opr_name(opr_info[0]) for opr_info in single_ops]
 
     @staticmethod
@@ -203,13 +204,14 @@ def add_to_trajectory_check_oprs(member_id, oprs, trajectory):
         trajectory = [(opr, member_id, None, None, None), trajectory, None]
     return trajectory
 
+
 def weighted_random_selection(seen_oprs=[]):
     while True:
         single_ops_filtered = [opr_info for opr_info in Combiner.single_ops if not (
                 get_opr_name(opr_info[0]) in seen_oprs and get_opr_name(opr_info[0]) in Combiner.one_time_oprs)]
 
         mutation_seen_oprs = [seen_opr for seen_opr in seen_oprs if seen_opr in Combiner.single_ops_name]
-        if random.random()<=0.5:
+        if random.random() <= 0.5:
             continue
         if len(mutation_seen_oprs) > 0:
             counter_seen_oprs = dict(Counter(mutation_seen_oprs))
@@ -222,5 +224,3 @@ def weighted_random_selection(seen_oprs=[]):
             opr = get_opr_name(random.choice(single_ops_filtered)[0])
             seen_oprs.append(opr)
 
-if __name__ == '__main__':
-    weighted_random_selection([])

@@ -1,0 +1,2728 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.14.0
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: true
+    python_version: 3.8.16
+    start_time: 1682935914.131317
+    t:
+      1:
+      - 1
+      - 5
+      - 53
+      - 54
+      - 55
+      2:
+      - 1
+      - 5
+      - 53
+      - 54
+      - 55
+      3:
+      - 13
+      - 15
+      - 16
+      - 19
+      - 23
+      4: 3.8.16
+      5: 0.14.0
+      8:
+      - 2
+      - 5
+name:
+  desc: null
+  value: '11'
+test_score_before:
+  desc: null
+  value: 0.9806763285024155
+trajectory:
+  desc: null
+  value:
+    '0':
+    - - utilities.check_zero
+      - 2166
+      - null
+      - null
+      - null
+    - - - utilities.check_inf_values
+        - 2166
+        - null
+        - null
+        - null
+      - - - QuantileTransformer(n_quantiles=100)
+          - 2166
+          - 12
+          - null
+          - null
+        - - - utilities.check_zero
+            - 97
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 97
+              - null
+              - null
+              - null
+            - - - <ufunc 'divide'>
+                - 97
+                - 3
+                - 72
+                - 6
+              - - - utilities.check_zero
+                  - 63
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 63
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'divide'>
+                      - 63
+                      - 17
+                      - 65
+                      - 22
+                    - - - utilities.check_zero
+                        - 45
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 45
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'multiply'>
+                            - 45
+                            - 6
+                            - 1
+                            - 0
+                          - - - utilities.check_zero
+                              - 23
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 23
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'divide'>
+                                  - 23
+                                  - 5
+                                  - 7
+                                  - 2
+                                - - - utilities.check_zero
+                                    - 10
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 10
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'multiply'>
+                                        - 10
+                                        - 13
+                                        - 11
+                                        - 3
+                                      - - - utilities.check_zero
+                                          - 4
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 4
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 4
+                                              - 2
+                                              - 4
+                                              - 0
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 1
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 1
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'divide'>
+                                              - 1
+                                              - 3
+                                              - 9
+                                              - 2
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                    - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 54
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 54
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'log'>
+                            - 54
+                            - 4
+                            - null
+                            - null
+                          - - - utilities.check_zero
+                              - 31
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 31
+                                - null
+                                - null
+                                - null
+                              - - - PolynomialFeatures()
+                                  - 31
+                                  - 2
+                                  - 9
+                                  - 3
+                                - - - utilities.check_zero
+                                    - 14
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 14
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'multiply'>
+                                        - 14
+                                        - 2
+                                        - 14
+                                        - 3
+                                      - - - utilities.check_zero
+                                          - 7
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 7
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 7
+                                              - 3
+                                              - 4
+                                              - 2
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 7
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 7
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 7
+                                              - 3
+                                              - 4
+                                              - 2
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                    - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                          - null
+                        - null
+                      - null
+                  - null
+                - null
+              - - - utilities.check_zero
+                  - 45
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 45
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'reciprocal'>
+                      - 45
+                      - 10
+                      - null
+                      - null
+                    - - - utilities.check_zero
+                        - 23
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 23
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 23
+                            - 5
+                            - 7
+                            - 2
+                          - - - utilities.check_zero
+                              - 10
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 10
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'multiply'>
+                                  - 10
+                                  - 13
+                                  - 11
+                                  - 3
+                                - - - utilities.check_zero
+                                    - 4
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 4
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 4
+                                        - 2
+                                        - 4
+                                        - 0
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 1
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 1
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'divide'>
+                                        - 1
+                                        - 3
+                                        - 9
+                                        - 2
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                    - null
+                  - null
+                - null
+            - null
+          - null
+        - null
+      - null
+    - null
+    '1':
+    - - utilities.check_zero
+      - 10550
+      - null
+      - null
+      - null
+    - - - utilities.check_inf_values
+        - 10550
+        - null
+        - null
+        - null
+      - - - <ufunc 'multiply'>
+          - 10550
+          - 11
+          - 10550
+          - 4
+        - - - utilities.check_zero
+            - 10517
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 10517
+              - null
+              - null
+              - null
+            - - - <ufunc 'divide'>
+                - 10517
+                - 6
+                - 10279
+                - 10
+              - - - utilities.check_zero
+                  - 10463
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 10463
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'multiply'>
+                      - 10463
+                      - 6
+                      - 9986
+                      - 14
+                    - - - utilities.check_zero
+                        - 10431
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 10431
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 10431
+                            - 2
+                            - 10451
+                            - 3
+                          - - - utilities.check_zero
+                              - 9968
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9968
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'reciprocal'>
+                                  - 9968
+                                  - 3
+                                  - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 9940
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9940
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 9940
+                                        - 3
+                                        - 9915
+                                        - 0
+                                      - - - utilities.check_zero
+                                          - 9921
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 9921
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 9921
+                                              - 2
+                                              - 9917
+                                              - 2
+                                            - - - utilities.check_zero
+                                                - 9914
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 9914
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - SelectPercentile(percentile=90)
+                                                    - 9914
+                                                    - 1
+                                                    - null
+                                                    - null
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - null
+                                                - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - null
+                              - null
+                            - null
+                          - - - utilities.check_zero
+                              - 9938
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9938
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'multiply'>
+                                  - 9938
+                                  - 5
+                                  - 9971
+                                  - 5
+                                - - - utilities.check_zero
+                                    - 9910
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9910
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 9910
+                                        - 1
+                                        - 9915
+                                        - 3
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 9936
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9936
+                                      - null
+                                      - null
+                                      - null
+                                    - - - SimpleImputer(copy=False)
+                                        - 9936
+                                        - 6
+                                        - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 9918
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 9918
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 9918
+                                              - 0
+                                              - 9910
+                                              - 0
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 9960
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 9960
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 9960
+                            - 5
+                            - 9946
+                            - 10
+                          - - - utilities.check_zero
+                              - 9915
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9915
+                                - null
+                                - null
+                                - null
+                              - - - PolynomialFeatures()
+                                  - 9915
+                                  - 1
+                                  - 9917
+                                  - 2
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                          - - - utilities.check_zero
+                              - 9938
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9938
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'divide'>
+                                  - 9938
+                                  - 9
+                                  - 9915
+                                  - 0
+                                - - - utilities.check_zero
+                                    - 9910
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9910
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 9910
+                                        - 1
+                                        - 9915
+                                        - 3
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                        - null
+                      - null
+                  - null
+                - null
+              - - - utilities.check_zero
+                  - 9968
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 9968
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'multiply'>
+                      - 9968
+                      - 1
+                      - 9993
+                      - 11
+                    - - - utilities.check_zero
+                        - 9940
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 9940
+                          - null
+                          - null
+                          - null
+                        - - - PolynomialFeatures()
+                            - 9940
+                            - 3
+                            - 9915
+                            - 0
+                          - - - utilities.check_zero
+                              - 9921
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9921
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'multiply'>
+                                  - 9921
+                                  - 2
+                                  - 9917
+                                  - 2
+                                - - - utilities.check_zero
+                                    - 9914
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9914
+                                      - null
+                                      - null
+                                      - null
+                                    - - - SelectPercentile(percentile=90)
+                                        - 9914
+                                        - 1
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 9916
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 9916
+                          - null
+                          - null
+                          - null
+                        - - - PolynomialFeatures()
+                            - 9916
+                            - 2
+                            - 9918
+                            - 1
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                  - null
+                - null
+            - null
+          - null
+        - - - utilities.check_zero
+            - 10517
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 10517
+              - null
+              - null
+              - null
+            - - - <ufunc 'divide'>
+                - 10517
+                - 6
+                - 10279
+                - 10
+              - - - utilities.check_zero
+                  - 10463
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 10463
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'multiply'>
+                      - 10463
+                      - 6
+                      - 9986
+                      - 14
+                    - - - utilities.check_zero
+                        - 10431
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 10431
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 10431
+                            - 2
+                            - 10451
+                            - 3
+                          - - - utilities.check_zero
+                              - 9968
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9968
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'reciprocal'>
+                                  - 9968
+                                  - 3
+                                  - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 9940
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9940
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 9940
+                                        - 3
+                                        - 9915
+                                        - 0
+                                      - - - utilities.check_zero
+                                          - 9921
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 9921
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 9921
+                                              - 2
+                                              - 9917
+                                              - 2
+                                            - - - utilities.check_zero
+                                                - 9914
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 9914
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - SelectPercentile(percentile=90)
+                                                    - 9914
+                                                    - 1
+                                                    - null
+                                                    - null
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - null
+                                                - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - null
+                              - null
+                            - null
+                          - - - utilities.check_zero
+                              - 9938
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9938
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'multiply'>
+                                  - 9938
+                                  - 5
+                                  - 9971
+                                  - 5
+                                - - - utilities.check_zero
+                                    - 9910
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9910
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 9910
+                                        - 1
+                                        - 9915
+                                        - 3
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 9936
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9936
+                                      - null
+                                      - null
+                                      - null
+                                    - - - SimpleImputer(copy=False)
+                                        - 9936
+                                        - 6
+                                        - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 9918
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 9918
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 9918
+                                              - 0
+                                              - 9910
+                                              - 0
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 9960
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 9960
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 9960
+                            - 5
+                            - 9946
+                            - 10
+                          - - - utilities.check_zero
+                              - 9915
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9915
+                                - null
+                                - null
+                                - null
+                              - - - PolynomialFeatures()
+                                  - 9915
+                                  - 1
+                                  - 9917
+                                  - 2
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                          - - - utilities.check_zero
+                              - 9938
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9938
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'divide'>
+                                  - 9938
+                                  - 9
+                                  - 9915
+                                  - 0
+                                - - - utilities.check_zero
+                                    - 9910
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9910
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 9910
+                                        - 1
+                                        - 9915
+                                        - 3
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                        - null
+                      - null
+                  - null
+                - null
+              - - - utilities.check_zero
+                  - 9968
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 9968
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'multiply'>
+                      - 9968
+                      - 1
+                      - 9993
+                      - 11
+                    - - - utilities.check_zero
+                        - 9940
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 9940
+                          - null
+                          - null
+                          - null
+                        - - - PolynomialFeatures()
+                            - 9940
+                            - 3
+                            - 9915
+                            - 0
+                          - - - utilities.check_zero
+                              - 9921
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 9921
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'multiply'>
+                                  - 9921
+                                  - 2
+                                  - 9917
+                                  - 2
+                                - - - utilities.check_zero
+                                    - 9914
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 9914
+                                      - null
+                                      - null
+                                      - null
+                                    - - - SelectPercentile(percentile=90)
+                                        - 9914
+                                        - 1
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                              - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 9916
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 9916
+                          - null
+                          - null
+                          - null
+                        - - - PolynomialFeatures()
+                            - 9916
+                            - 2
+                            - 9918
+                            - 1
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                  - null
+                - null
+            - null
+          - null
+      - null
+    - null
+    '2':
+    - - utilities.check_zero
+      - 20210
+      - null
+      - null
+      - null
+    - - - utilities.check_inf_values
+        - 20210
+        - null
+        - null
+        - null
+      - - - <ufunc 'divide'>
+          - 20210
+          - 4
+          - 20148
+          - 13
+        - - - utilities.check_zero
+            - 20196
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 20196
+              - null
+              - null
+              - null
+            - - - <ufunc 'log'>
+                - 20196
+                - 14
+                - null
+                - null
+              - - - utilities.check_zero
+                  - 20148
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 20148
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'reciprocal'>
+                      - 20148
+                      - 11
+                      - null
+                      - null
+                    - - - utilities.check_zero
+                        - 20031
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 20031
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 20031
+                            - 11
+                            - 20130
+                            - 11
+                          - - - utilities.check_zero
+                              - 20017
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 20017
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'divide'>
+                                  - 20017
+                                  - 18
+                                  - 19923
+                                  - 3
+                                - - - utilities.check_zero
+                                    - 20003
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 20003
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'divide'>
+                                        - 20003
+                                        - 16
+                                        - 19932
+                                        - 7
+                                      - - - utilities.check_zero
+                                          - 19940
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19940
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'divide'>
+                                              - 19940
+                                              - 15
+                                              - 19951
+                                              - 3
+                                            - - - utilities.check_zero
+                                                - 19931
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19931
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - <ufunc 'multiply'>
+                                                    - 19931
+                                                    - 5
+                                                    - 19924
+                                                    - 2
+                                                  - - - utilities.check_zero
+                                                      - 19871
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19871
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - <ufunc 'multiply'>
+                                                          - 19871
+                                                          - 2
+                                                          - 19839
+                                                          - 0
+                                                        - - - utilities.check_zero
+                                                            - 19829
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19829
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - PolynomialFeatures()
+                                                                - 19829
+                                                                - 0
+                                                                - 19861
+                                                                - 5
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                              - - - utilities.check_zero
+                                                                  - 19835
+                                                                  - null
+                                                                  - null
+                                                                  - null
+                                                                - - - utilities.check_inf_values
+                                                                    - 19835
+                                                                    - null
+                                                                    - null
+                                                                    - null
+                                                                  - - - <ufunc 'multiply'>
+                                                                      - 19835
+                                                                      - 0
+                                                                      - 19847
+                                                                      - 3
+                                                                    - - - utilities.check_zero
+                                                                        - 19823
+                                                                        - null
+                                                                        - null
+                                                                        - null
+                                                                      - - - utilities.check_inf_values
+                                                                          - 19823
+                                                                          - null
+                                                                          - null
+                                                                          - null
+                                                                        - - - <ufunc
+                                                                              'multiply'>
+                                                                            - 19823
+                                                                            - 0
+                                                                            - 19824
+                                                                            - 2
+                                                                          - - null
+                                                                            - null
+                                                                            - null
+                                                                            - null
+                                                                            - null
+                                                                          - - null
+                                                                            - null
+                                                                            - null
+                                                                            - null
+                                                                            - null
+                                                                        - null
+                                                                      - null
+                                                                    - - - utilities.check_zero
+                                                                        - 19820
+                                                                        - null
+                                                                        - null
+                                                                        - null
+                                                                      - - - utilities.check_inf_values
+                                                                          - 19820
+                                                                          - null
+                                                                          - null
+                                                                          - null
+                                                                        - - - StandardScaler()
+                                                                            - 19820
+                                                                            - 1
+                                                                            - null
+                                                                            - null
+                                                                          - - null
+                                                                            - null
+                                                                            - null
+                                                                            - null
+                                                                            - null
+                                                                          - null
+                                                                        - null
+                                                                      - null
+                                                                  - null
+                                                                - null
+                                                            - null
+                                                          - null
+                                                        - - - utilities.check_zero
+                                                            - 19823
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19823
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - <ufunc 'divide'>
+                                                                - 19823
+                                                                - 0
+                                                                - 19820
+                                                                - 1
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                            - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                  - - - utilities.check_zero
+                                                      - 19822
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19822
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - PolynomialFeatures()
+                                                          - 19822
+                                                          - 1
+                                                          - 19821
+                                                          - 3
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                - null
+                                              - null
+                                            - - - utilities.check_zero
+                                                - 19924
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19924
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - <ufunc 'divide'>
+                                                    - 19924
+                                                    - 3
+                                                    - 19924
+                                                    - 11
+                                                  - - - utilities.check_zero
+                                                      - 19822
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19822
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - PolynomialFeatures()
+                                                          - 19822
+                                                          - 1
+                                                          - 19821
+                                                          - 3
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                  - - - utilities.check_zero
+                                                      - 19822
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19822
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - PolynomialFeatures()
+                                                          - 19822
+                                                          - 1
+                                                          - 19821
+                                                          - 3
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19821
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19821
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 19821
+                                              - 0
+                                              - 19921
+                                              - 1
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - - utilities.check_zero
+                                                - 19896
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19896
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - null
+                                                    - 19896
+                                                    - 0
+                                                    - null
+                                                    - null
+                                                  - - - utilities.check_zero
+                                                      - 19830
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19830
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - <ufunc 'multiply'>
+                                                          - 19830
+                                                          - 2
+                                                          - 19873
+                                                          - 1
+                                                        - - - utilities.check_zero
+                                                            - 19828
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19828
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - <ufunc 'divide'>
+                                                                - 19828
+                                                                - 2
+                                                                - 19823
+                                                                - 0
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                            - null
+                                                          - null
+                                                        - - - utilities.check_zero
+                                                            - 19829
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19829
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - PCA(n_components=0.8,
+                                                                  svd_solver='full')
+                                                                - 19829
+                                                                - 1
+                                                                - null
+                                                                - null
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                              - null
+                                                            - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                  - null
+                                                - null
+                                              - null
+                                          - null
+                                        - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 19821
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19821
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 19821
+                                        - 1
+                                        - 19869
+                                        - 3
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19822
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19822
+                                            - null
+                                            - null
+                                            - null
+                                          - - - QuantileTransformer(n_quantiles=100)
+                                              - 19822
+                                              - 0
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - null
+                                          - null
+                                        - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                          - - - utilities.check_zero
+                              - 19910
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 19910
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'divide'>
+                                  - 19910
+                                  - 0
+                                  - 19971
+                                  - 14
+                                - - - utilities.check_zero
+                                    - 19820
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19820
+                                      - null
+                                      - null
+                                      - null
+                                    - - - PolynomialFeatures()
+                                        - 19820
+                                        - 1
+                                        - 19824
+                                        - 3
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 19901
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19901
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'reciprocal'>
+                                        - 19901
+                                        - 10
+                                        - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19883
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19883
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 19883
+                                              - 12
+                                              - 19835
+                                              - 1
+                                            - - - utilities.check_zero
+                                                - 19871
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19871
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - SimpleImputer(copy=False)
+                                                    - 19871
+                                                    - 5
+                                                    - null
+                                                    - null
+                                                  - - - utilities.check_zero
+                                                      - 19829
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19829
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - PolynomialFeatures()
+                                                          - 19829
+                                                          - 0
+                                                          - 19861
+                                                          - 5
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                        - - - utilities.check_zero
+                                                            - 19835
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19835
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - <ufunc 'multiply'>
+                                                                - 19835
+                                                                - 0
+                                                                - 19847
+                                                                - 3
+                                                              - - - utilities.check_zero
+                                                                  - 19823
+                                                                  - null
+                                                                  - null
+                                                                  - null
+                                                                - - - utilities.check_inf_values
+                                                                    - 19823
+                                                                    - null
+                                                                    - null
+                                                                    - null
+                                                                  - - - <ufunc 'multiply'>
+                                                                      - 19823
+                                                                      - 0
+                                                                      - 19824
+                                                                      - 2
+                                                                    - - null
+                                                                      - null
+                                                                      - null
+                                                                      - null
+                                                                      - null
+                                                                    - - null
+                                                                      - null
+                                                                      - null
+                                                                      - null
+                                                                      - null
+                                                                  - null
+                                                                - null
+                                                              - - - utilities.check_zero
+                                                                  - 19820
+                                                                  - null
+                                                                  - null
+                                                                  - null
+                                                                - - - utilities.check_inf_values
+                                                                    - 19820
+                                                                    - null
+                                                                    - null
+                                                                    - null
+                                                                  - - - StandardScaler()
+                                                                      - 19820
+                                                                      - 1
+                                                                      - null
+                                                                      - null
+                                                                    - - null
+                                                                      - null
+                                                                      - null
+                                                                      - null
+                                                                      - null
+                                                                    - null
+                                                                  - null
+                                                                - null
+                                                            - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                  - null
+                                                - null
+                                              - null
+                                            - - - utilities.check_zero
+                                                - 19823
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19823
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - <ufunc 'multiply'>
+                                                    - 19823
+                                                    - 0
+                                                    - 19824
+                                                    - 2
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                - null
+                                              - null
+                                          - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                        - null
+                      - null
+                    - null
+                  - null
+                - null
+              - null
+            - null
+          - null
+        - - - utilities.check_zero
+            - 20031
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 20031
+              - null
+              - null
+              - null
+            - - - <ufunc 'divide'>
+                - 20031
+                - 11
+                - 20130
+                - 11
+              - - - utilities.check_zero
+                  - 20017
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 20017
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'divide'>
+                      - 20017
+                      - 18
+                      - 19923
+                      - 3
+                    - - - utilities.check_zero
+                        - 20003
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 20003
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'divide'>
+                            - 20003
+                            - 16
+                            - 19932
+                            - 7
+                          - - - utilities.check_zero
+                              - 19940
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 19940
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'divide'>
+                                  - 19940
+                                  - 15
+                                  - 19951
+                                  - 3
+                                - - - utilities.check_zero
+                                    - 19931
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19931
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'multiply'>
+                                        - 19931
+                                        - 5
+                                        - 19924
+                                        - 2
+                                      - - - utilities.check_zero
+                                          - 19871
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19871
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 19871
+                                              - 2
+                                              - 19839
+                                              - 0
+                                            - - - utilities.check_zero
+                                                - 19829
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19829
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - PolynomialFeatures()
+                                                    - 19829
+                                                    - 0
+                                                    - 19861
+                                                    - 5
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - - - utilities.check_zero
+                                                      - 19835
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19835
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - <ufunc 'multiply'>
+                                                          - 19835
+                                                          - 0
+                                                          - 19847
+                                                          - 3
+                                                        - - - utilities.check_zero
+                                                            - 19823
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19823
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - <ufunc 'multiply'>
+                                                                - 19823
+                                                                - 0
+                                                                - 19824
+                                                                - 2
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                            - null
+                                                          - null
+                                                        - - - utilities.check_zero
+                                                            - 19820
+                                                            - null
+                                                            - null
+                                                            - null
+                                                          - - - utilities.check_inf_values
+                                                              - 19820
+                                                              - null
+                                                              - null
+                                                              - null
+                                                            - - - StandardScaler()
+                                                                - 19820
+                                                                - 1
+                                                                - null
+                                                                - null
+                                                              - - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                                - null
+                                                              - null
+                                                            - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                - null
+                                              - null
+                                            - - - utilities.check_zero
+                                                - 19823
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19823
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - <ufunc 'divide'>
+                                                    - 19823
+                                                    - 0
+                                                    - 19820
+                                                    - 1
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19822
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19822
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 19822
+                                              - 1
+                                              - 19821
+                                              - 3
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 19924
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19924
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'divide'>
+                                        - 19924
+                                        - 3
+                                        - 19924
+                                        - 11
+                                      - - - utilities.check_zero
+                                          - 19822
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19822
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 19822
+                                              - 1
+                                              - 19821
+                                              - 3
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19822
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19822
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 19822
+                                              - 1
+                                              - 19821
+                                              - 3
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                          - null
+                                        - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                          - - - utilities.check_zero
+                              - 19821
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 19821
+                                - null
+                                - null
+                                - null
+                              - - - PolynomialFeatures()
+                                  - 19821
+                                  - 0
+                                  - 19921
+                                  - 1
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 19896
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19896
+                                      - null
+                                      - null
+                                      - null
+                                    - - - null
+                                        - 19896
+                                        - 0
+                                        - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19830
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19830
+                                            - null
+                                            - null
+                                            - null
+                                          - - - <ufunc 'multiply'>
+                                              - 19830
+                                              - 2
+                                              - 19873
+                                              - 1
+                                            - - - utilities.check_zero
+                                                - 19828
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19828
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - <ufunc 'divide'>
+                                                    - 19828
+                                                    - 2
+                                                    - 19823
+                                                    - 0
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                - null
+                                              - null
+                                            - - - utilities.check_zero
+                                                - 19829
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19829
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - PCA(n_components=0.8, svd_solver='full')
+                                                    - 19829
+                                                    - 1
+                                                    - null
+                                                    - null
+                                                  - - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                    - null
+                                                  - null
+                                                - null
+                                              - null
+                                          - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 19821
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 19821
+                          - null
+                          - null
+                          - null
+                        - - - PolynomialFeatures()
+                            - 19821
+                            - 1
+                            - 19869
+                            - 3
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                          - - - utilities.check_zero
+                              - 19822
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 19822
+                                - null
+                                - null
+                                - null
+                              - - - QuantileTransformer(n_quantiles=100)
+                                  - 19822
+                                  - 0
+                                  - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                                - null
+                              - null
+                            - null
+                        - null
+                      - null
+                  - null
+                - null
+              - - - utilities.check_zero
+                  - 19910
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 19910
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'divide'>
+                      - 19910
+                      - 0
+                      - 19971
+                      - 14
+                    - - - utilities.check_zero
+                        - 19820
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 19820
+                          - null
+                          - null
+                          - null
+                        - - - PolynomialFeatures()
+                            - 19820
+                            - 1
+                            - 19824
+                            - 3
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                        - null
+                      - null
+                    - - - utilities.check_zero
+                        - 19901
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 19901
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'reciprocal'>
+                            - 19901
+                            - 10
+                            - null
+                            - null
+                          - - - utilities.check_zero
+                              - 19883
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 19883
+                                - null
+                                - null
+                                - null
+                              - - - <ufunc 'multiply'>
+                                  - 19883
+                                  - 12
+                                  - 19835
+                                  - 1
+                                - - - utilities.check_zero
+                                    - 19871
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19871
+                                      - null
+                                      - null
+                                      - null
+                                    - - - SimpleImputer(copy=False)
+                                        - 19871
+                                        - 5
+                                        - null
+                                        - null
+                                      - - - utilities.check_zero
+                                          - 19829
+                                          - null
+                                          - null
+                                          - null
+                                        - - - utilities.check_inf_values
+                                            - 19829
+                                            - null
+                                            - null
+                                            - null
+                                          - - - PolynomialFeatures()
+                                              - 19829
+                                              - 0
+                                              - 19861
+                                              - 5
+                                            - - null
+                                              - null
+                                              - null
+                                              - null
+                                              - null
+                                            - - - utilities.check_zero
+                                                - 19835
+                                                - null
+                                                - null
+                                                - null
+                                              - - - utilities.check_inf_values
+                                                  - 19835
+                                                  - null
+                                                  - null
+                                                  - null
+                                                - - - <ufunc 'multiply'>
+                                                    - 19835
+                                                    - 0
+                                                    - 19847
+                                                    - 3
+                                                  - - - utilities.check_zero
+                                                      - 19823
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19823
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - <ufunc 'multiply'>
+                                                          - 19823
+                                                          - 0
+                                                          - 19824
+                                                          - 2
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                      - null
+                                                    - null
+                                                  - - - utilities.check_zero
+                                                      - 19820
+                                                      - null
+                                                      - null
+                                                      - null
+                                                    - - - utilities.check_inf_values
+                                                        - 19820
+                                                        - null
+                                                        - null
+                                                        - null
+                                                      - - - StandardScaler()
+                                                          - 19820
+                                                          - 1
+                                                          - null
+                                                          - null
+                                                        - - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                          - null
+                                                        - null
+                                                      - null
+                                                    - null
+                                                - null
+                                              - null
+                                          - null
+                                        - null
+                                      - null
+                                    - null
+                                  - null
+                                - - - utilities.check_zero
+                                    - 19823
+                                    - null
+                                    - null
+                                    - null
+                                  - - - utilities.check_inf_values
+                                      - 19823
+                                      - null
+                                      - null
+                                      - null
+                                    - - - <ufunc 'multiply'>
+                                        - 19823
+                                        - 0
+                                        - 19824
+                                        - 2
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                      - - null
+                                        - null
+                                        - null
+                                        - null
+                                        - null
+                                    - null
+                                  - null
+                              - null
+                            - null
+                          - null
+                        - null
+                      - null
+                  - null
+                - null
+            - null
+          - null
+      - null
+    - null

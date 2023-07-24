@@ -192,7 +192,7 @@ def get_opt_config_data():
 
 
 def plot_post_hoc_bo():
-    data = pd.read_csv('opt_configurations_found.csv')
+    data = pd.read_csv('plots_html/opt_configurations_found.csv')
     categorical_cols = ['children_per_step', 'max_pop_size',
                         'population_size', 'selection_type',
                         'total_number_of_function_evaluations']

@@ -2,16 +2,14 @@ import os.path
 from abc import abstractmethod
 
 import numpy as np
-import wandb
-
+import torch
 from sklearn.metrics import accuracy_score
+from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
 
 from EA.evolution import EA
 from EA.member_handling import Member
 from EA.strategies import apply_trajectory
 from data.datasets_handling import get_dataset_split, get_dataset_name
-from tabpfn.scripts.transformer_prediction_interface import TabPFNClassifier
-import torch
 
 
 class BBO:
@@ -25,9 +23,9 @@ class BBO:
         self.results = {}
         self.device = 'cpu' if not torch.cuda.is_available() else 'cuda'
 
-    def run_ea(self,job_name,X, y, X_test, y_test, params) -> Member:
+    def run_ea(self, job_name, X, y, X_test, y_test, params) -> Member:
         print('applying EA on {}'.format(self.dataset_name))
-        ea = EA(job_name,self.dataset_name, device=self.device, initial_X_train=X, y_train=y, X_test=X_test,
+        ea = EA(job_name, self.dataset_name, device=self.device, initial_X_train=X, y_train=y, X_test=X_test,
                 y_test=y_test, **params)
         res = ea.optimize()
         return res

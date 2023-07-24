@@ -1,0 +1,278 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.14.0
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: true
+    python_version: 3.8.16
+    start_time: 1682937020.454802
+    t:
+      1:
+      - 1
+      - 5
+      - 53
+      - 54
+      - 55
+      2:
+      - 1
+      - 5
+      - 53
+      - 54
+      - 55
+      3:
+      - 13
+      - 15
+      - 16
+      - 19
+      - 23
+      4: 3.8.16
+      5: 0.14.0
+      8:
+      - 2
+      - 5
+name:
+  desc: null
+  value: '18'
+test_score_before:
+  desc: null
+  value: 0.7348484848484849
+trajectory:
+  desc: null
+  value:
+    '0':
+    - - utilities.check_zero
+      - 1252
+      - null
+      - null
+      - null
+    - - - utilities.check_inf_values
+        - 1252
+        - null
+        - null
+        - null
+      - - - <ufunc 'square'>
+          - 1252
+          - 1
+          - null
+          - null
+        - - - utilities.check_zero
+            - 785
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 785
+              - null
+              - null
+              - null
+            - - - <ufunc 'exp'>
+                - 785
+                - 0
+                - null
+                - null
+              - - - utilities.check_zero
+                  - 595
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 595
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'power'>
+                      - 595
+                      - 4
+                      - null
+                      - null
+                    - - - utilities.check_zero
+                        - 80
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 80
+                          - null
+                          - null
+                          - null
+                        - - - <ufunc 'sqrt'>
+                            - 80
+                            - 1
+                            - null
+                            - null
+                          - - - utilities.check_zero
+                              - 6
+                              - null
+                              - null
+                              - null
+                            - - - utilities.check_inf_values
+                                - 6
+                                - null
+                                - null
+                                - null
+                              - - - FeatureAgglomeration(n_clusters=5)
+                                  - 6
+                                  - 1
+                                  - null
+                                  - null
+                                - - null
+                                  - null
+                                  - null
+                                  - null
+                                  - null
+                                - null
+                              - null
+                            - null
+                          - null
+                        - null
+                      - null
+                    - null
+                  - null
+                - null
+              - null
+            - null
+          - null
+        - null
+      - null
+    - null
+    '1':
+    - - utilities.check_zero
+      - 2148
+      - null
+      - null
+      - null
+    - - - utilities.check_inf_values
+        - 2148
+        - null
+        - null
+        - null
+      - - - <ufunc 'cos'>
+          - 2148
+          - 3
+          - null
+          - null
+        - - - utilities.check_zero
+            - 1548
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 1548
+              - null
+              - null
+              - null
+            - - - null
+                - 1548
+                - 0
+                - null
+                - null
+              - - - utilities.check_zero
+                  - 1481
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 1481
+                    - null
+                    - null
+                    - null
+                  - - - FeatureAgglomeration(n_clusters=5)
+                      - 1481
+                      - 3
+                      - null
+                      - null
+                    - - null
+                      - null
+                      - null
+                      - null
+                      - null
+                    - null
+                  - null
+                - null
+              - null
+            - null
+          - null
+        - null
+      - null
+    - null
+    '2':
+    - - utilities.check_zero
+      - 3009
+      - null
+      - null
+      - null
+    - - - utilities.check_inf_values
+        - 3009
+        - null
+        - null
+        - null
+      - - - <ufunc 'square'>
+          - 3009
+          - 2
+          - null
+          - null
+        - - - utilities.check_zero
+            - 2981
+            - null
+            - null
+            - null
+          - - - utilities.check_inf_values
+              - 2981
+              - null
+              - null
+              - null
+            - - - FeatureAgglomeration(n_clusters=5)
+                - 2981
+                - 1
+                - null
+                - null
+              - - - utilities.check_zero
+                  - 2974
+                  - null
+                  - null
+                  - null
+                - - - utilities.check_inf_values
+                    - 2974
+                    - null
+                    - null
+                    - null
+                  - - - <ufunc 'sqrt'>
+                      - 2974
+                      - 4
+                      - null
+                      - null
+                    - - - utilities.check_zero
+                        - 2966
+                        - null
+                        - null
+                        - null
+                      - - - utilities.check_inf_values
+                          - 2966
+                          - null
+                          - null
+                          - null
+                        - - - null
+                            - 2966
+                            - 2
+                            - null
+                            - null
+                          - - null
+                            - null
+                            - null
+                            - null
+                            - null
+                          - null
+                        - null
+                      - null
+                    - null
+                  - null
+                - null
+              - null
+            - null
+          - null
+        - null
+      - null
+    - null
