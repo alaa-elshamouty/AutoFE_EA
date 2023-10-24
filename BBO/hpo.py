@@ -23,9 +23,10 @@ class BBO:
         self.results = {}
         self.device = 'cpu' if not torch.cuda.is_available() else 'cuda'
 
-    def run_ea(self, job_name, X, y, X_test, y_test, params) -> Member:
+    def run_ea(self, job_name, X, y, X_test, y_test, params, wandb_logging=False) -> Member:
         print('applying EA on {}'.format(self.dataset_name))
-        ea = EA(job_name, self.dataset_name, device=self.device, initial_X_train=X, y_train=y, X_test=X_test,
+        ea = EA(job_name, self.dataset_name, device=self.device, wandb_logging=wandb_logging, initial_X_train=X,
+                y_train=y, X_test=X_test,
                 y_test=y_test, **params)
         res = ea.optimize()
         return res

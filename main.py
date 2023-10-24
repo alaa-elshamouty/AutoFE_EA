@@ -14,13 +14,14 @@ parser.add_argument('--runtime', type=int, default=10 * 60 * 60,
                     help='Maximum runtime for BO in seconds. If EA_only set to True then it is maximum number of evaluations')
 parser.add_argument('--ea_only', action='store_true', help='Run EA with predefined params')
 parser.add_argument('--evaluate', action='store_true', help='Run EA with optimal configurations found')
+parser.add_argument('--wandb', action='store_true', help='Activate wandb logging. Requires an account.')
 args = parser.parse_args()
 
 
 def main_ea(args):
     # Run EA with self defined hyperparameters
     dataset = global_datasets.datasets[args.dataset_id]
-    bo = BO(dataset=dataset)
+    bo = BO(dataset=dataset, wandb_logging=args.wandb)
     params = {'population_size': 1,
               'selection_type': ParentSelection.TOURNAMENT,
               'total_number_of_function_evaluations': 200,
@@ -30,7 +31,7 @@ def main_ea(args):
               'regularizer': 0.5}
     X_train, X_test, y_train, y_test = bo.split
     optimum = bo.run_ea(job_name='ea_only_weight_oprs', X=X_train, y=y_train, X_test=X_test, y_test=y_test,
-                        params=params)
+                        params=params, wandb_logging=args.wandb)
 
     # Evaluate on X_test
     results = bo.evaluate_ea(optimum)
@@ -52,12 +53,12 @@ def main_evaluate(args):
     opt_config_file = os.path.join(directory, dataset_name, 'opt_cfg.json')
     f = open(opt_config_file)
     params = json.load(f)
-    bo = BO(dataset=dataset_fn)
+    bo = BO(dataset=dataset_fn, wandb_logging=args.wandb)
     X_train, X_test, y_train, y_test = bo.split
     trajectories = {}
     for i in range(3):
         try:
-            optimum = bo.run_ea(job_name='opt_cfg', X=X_train, y=y_train, X_test=X_test, y_test=y_test, params=params)
+            optimum = bo.run_ea(job_name='opt_cfg', X=X_train, y=y_train, X_test=X_test, y_test=y_test, params=params, wandb_logging=args.wandb)
             trajectories[i] = optimum.traj
             with open(f'{directory}/{dataset_name}/{dataset_name}_trajs.pkl', 'wb') as f:
                 pickle.dump(trajectories, f)
@@ -74,11 +75,11 @@ def main(args):
     smac_type = 'BOHB'
     runtime = args.runtime
     working_dir = 'results_bo'
-    bo = BO(smac_type=smac_type, runtime=runtime, working_dir=working_dir, dataset=dataset)
+    bo = BO(smac_type=smac_type, runtime=runtime, working_dir=working_dir, dataset=dataset, wandb_logging=args.wandb)
     X_train, X_test, y_train, y_test = bo.split
     # get the best hyperparameters for EA
     incumbent = bo.run_bo()
-    optimum = bo.run_ea(job_name='optimal_config', X=X_train, y=y_train, params=incumbent)
+    optimum = bo.run_ea(job_name='optimal_config', X=X_train, y=y_train, params=incumbent, wandb_logging=args.wandb)
 
 
 if __name__ == "__main__":

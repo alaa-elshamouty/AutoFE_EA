@@ -11,7 +11,7 @@ from BBO.hpo import BBO
 
 
 class BO(BBO):
-    def __init__(self, dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo'):
+    def __init__(self, dataset, smac_type='BOHB', runtime=21600, working_dir='results_bo', wandb_logging=False):
         super().__init__(dataset)
         self.cs = ConfigurationSpace()
         self.params = []
@@ -21,6 +21,7 @@ class BO(BBO):
             os.mkdir(working_dir)
         self.working_dir = working_dir
         self._setup_initial_config_space()
+        self.wandb_logging = wandb_logging
 
     def _setup_initial_config_space(self):
         # Build Configuration Space which defines all parameters and their ranges.
@@ -54,7 +55,7 @@ class BO(BBO):
         self.results['EA_params'] = config
 
         optimum = self.run_ea(job_name='searching_config', X=X_train, y=y_train, X_test=X_test, y_test=y_test,
-                              params=config)
+                              params=config, wandb_logging=self.wandb_logging)
         return 1 - optimum.fitness
 
     def run_bo(self):

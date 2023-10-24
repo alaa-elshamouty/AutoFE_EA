@@ -32,6 +32,7 @@ class EA:
             fraction_mutation: float = 0.5,
             max_pop_size: int = 20,
             regularizer: float = 0.75,
+            wandb_logging: bool = False,
 
     ):
         """
@@ -76,6 +77,9 @@ class EA:
         regularizer: float = 0.75
             percentage of the population to remove when max_pop_size exceeded
 
+        wandb_logging: bool = False
+            activate wandb logging
+
         """
         assert 0 <= fraction_mutation <= 1
         assert 0 < children_per_step
@@ -104,27 +108,29 @@ class EA:
         self._func_evals = population_size
         self.max_pop_size = max_pop_size
         self.regularizer = regularizer
+        self.wandb_logging = wandb_logging
         # will store the optimization trajectory and lets you easily observe how
         # often a new best member was generated
         self.trajectory = [self.population[0]]
         print(f"Average fitness of population: {self.get_average_fitness()}")
-        wandb.init(
-            project=f'EA_with_opt_cfg_Final',
-            name=dataset_name,
-            notes=f'applying EA with optimal configuration found on datasets, final run',
-            job_type=self.job_name,
-            tags=[dataset_name],
-            config={
-                'name': dataset_name,
-                'population_size': self.pop_size,
-                'selection_type': self.selection,
-                'max_func_evals': self.max_func_evals,
-                'children_per_step': self.num_children,
-                'fraction_mutation': self.frac_mutants,
-                'ns_every': self.max_pop_size,
-                'regularizer': self.regularizer
-            }
-        )
+        if self.wandb_logging:
+            wandb.init(
+                project=f'EA_with_opt_cfg_Final',
+                name=dataset_name,
+                notes=f'applying EA with optimal configuration found on datasets, final run',
+                job_type=self.job_name,
+                tags=[dataset_name],
+                config={
+                    'name': dataset_name,
+                    'population_size': self.pop_size,
+                    'selection_type': self.selection,
+                    'max_func_evals': self.max_func_evals,
+                    'children_per_step': self.num_children,
+                    'fraction_mutation': self.frac_mutants,
+                    'ns_every': self.max_pop_size,
+                    'regularizer': self.regularizer
+                }
+            )
 
     def get_average_fitness(self) -> float:
         """The average fitness of the current population"""
@@ -226,12 +232,13 @@ class EA:
         best_x_before = self.population[0].x_coordinate
         best_fitness_before = self.population[0].fitness
         test_score_before = self.population[0].evaluate(self.X_test, self.y_test)
-        wandb.config['first_best_fitness'] = best_fitness_before
-        wandb.config['first_test_score'] = test_score_before
-        wandb.log({'average fitness': self.get_average_fitness(), 'best fitness': best_fitness_before,
-                   'pop_size': len(self.population),
-                   'dims_best_member': self.population[0].x_coordinate.shape[-1],
-                   'test_score': test_score_before})
+        if self.wandb_logging:
+            wandb.config['first_best_fitness'] = best_fitness_before
+            wandb.config['first_test_score'] = test_score_before
+            wandb.log({'average fitness': self.get_average_fitness(), 'best fitness': best_fitness_before,
+                       'pop_size': len(self.population),
+                       'dims_best_member': self.population[0].x_coordinate.shape[-1],
+                       'test_score': test_score_before})
         while self._func_evals < self.max_func_evals:
             avg_fitness = self.step()
             best_x_now = self.population[0].x_coordinate
@@ -260,16 +267,18 @@ class EA:
                 f"Func evals: {self._func_evals}",
                 "----------------------------------",
             ]
-            wandb.log({'average fitness': avg_fitness, 'best fitness': best_fitness, 'pop_size': len(self.population),
-                       'dims_best_member': self.population[0].x_coordinate.shape[-1], 'test_score': best_member_test})
+            if self.wandb_logging:
+                wandb.log({'average fitness': avg_fitness, 'best fitness': best_fitness, 'pop_size': len(self.population),
+                           'dims_best_member': self.population[0].x_coordinate.shape[-1], 'test_score': best_member_test})
             if step % 20 == 0:
                 print("\n".join(lines))
             step += 1
             pbar.update(1)
         operations_counter = Counter(self.population[0].seen_oprs)
-        wandb.config['operations'] = dict(operations_counter)
-        wandb.config['final_test_score'] = test_score_before
-        wandb.config['final_best_fitness'] = best_fitness_before
+        if self.wandb_logging:
+            wandb.config['operations'] = dict(operations_counter)
+            wandb.config['final_test_score'] = test_score_before
+            wandb.config['final_best_fitness'] = best_fitness_before
+            wandb.finish()
         pbar.close()
-        wandb.finish()
         return self.population[0]
