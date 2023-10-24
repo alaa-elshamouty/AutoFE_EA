@@ -1,1 +1,1 @@
-Automated Feature Engineering using EA Search
+A method for automating the feature engineering process for non-categorical tabular datasets using an evolutionary algorithm and Hyperband Bayesian Optimization to improve the predictive performance of TabPFN.
