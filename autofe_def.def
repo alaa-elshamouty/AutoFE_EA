@@ -1,0 +1,20 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%files
+    AutoFE_EA3 /
+
+
+%post
+    apt-get -y update
+    apt-get -y install python3
+    apt-get install -y python3-pip
+    pip3 install -r /AutoFE_EA3/requirements.txt
+    echo "Installation complete"
+
+%environment
+    PYTHONPATH=/AutoFE_EA3
+    export PYTHONPATH
+
+%runscript
+    python3 /AutoFE_EA3/main.py
